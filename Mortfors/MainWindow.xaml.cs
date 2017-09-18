@@ -1,3 +1,4 @@
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,10 +26,34 @@ namespace Mortfors
             InitializeComponent();
 
 
+            //bool boolfound = false;
+            //using (NpgsqlConnection conn = new
+            //NpgsqlConnection("Server=pgserver.mah.se; Port=5432; UserId = ae7076; Password = xvkkumqd; Database = ae7076"))
+            //{
+            //    conn.Open();
+            //    NpgsqlCommand cmd = new NpgsqlCommand("SELECT version(); ", conn);
+            //    NpgsqlDataReader dr = cmd.ExecuteReader();
 
 
+            //    if (dr.Read())
+            //    {
+            //        boolfound = true;
+            //        Console.WriteLine("connection established");
+            //        Console.WriteLine("{0}", dr[0]);
+            //    }
+            //    if (boolfound == false)
+            //    {
+            //        Console.WriteLine("Data does not exist");
+            //    }
+            //    dr.Close();
+            //}
+            //Console.ReadLine();
 
-
+            DBConnection.ConnectAndSelect("Timmermansgatan");
         }
+
+
+
+
     }
 }
