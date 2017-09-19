@@ -42,17 +42,17 @@ namespace Mortfors
             return boolfound;
         }
 
-        public static void ConnectAndSelect(string what)
+        public static bool ConnectVerifyUser(string selectStatement, string username, string hashedPassword)
         {
             bool boolfound = false;
             using (NpgsqlConnection conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + ""))
             {
                 conn.Open();
                 //NpgsqlCommand cmd = new NpgsqlCommand("SELECT version(); ", conn);
-                NpgsqlCommand cmd = new NpgsqlCommand("Select * from hallplats WHERE gatu_address = :what;", conn);
-                //cmd.Parameters.Add(new NpgsqlParameter("Gatu_address", NpgsqlTypes.NpgsqlDbType.Text));
-                cmd.Parameters.Add(new NpgsqlParameter(":what", what));
-                //cmd.Parameters.AddWithValue(":what", what);
+                //"Select * from hallplats WHERE gatu_address = :username;"
+                NpgsqlCommand cmd = new NpgsqlCommand(selectStatement, conn);
+                cmd.Parameters.Add(new NpgsqlParameter(":username", username));
+                cmd.Parameters.Add(new NpgsqlParameter(":hashedPassword", hashedPassword));
                 NpgsqlDataReader dr = cmd.ExecuteReader();
 
 
@@ -75,6 +75,7 @@ namespace Mortfors
                     }
                 }
             }
+            return boolfound;
         }
 
 
