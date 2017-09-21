@@ -243,7 +243,7 @@ public class SimpleHash
 
     public static void HashTest()
     {
-        string username = "199301123395";  // original password
+        string username = "randoro93@gmail.com";  // original password
         string password = "test123";  // original password
         string wrongPassword = "password";    // wrong password
 

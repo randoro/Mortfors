@@ -63,7 +63,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Anstalld.cs" />
+    <Compile Include="AnstalldWindow.xaml.cs">
+      <DependentUpon>AnstalldWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Bussresa.cs" />
+    <Compile Include="Resenar.cs" />
+    <Compile Include="ResenarWindow.xaml.cs">
+      <DependentUpon>ResenarWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SimpleHash.cs" />
+    <Compile Include="User.cs" />
+    <Page Include="AnstalldWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -78,6 +92,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ResenarWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

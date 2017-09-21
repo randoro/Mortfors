@@ -8,36 +8,50 @@ namespace Mortfors
 {
     static class Authenticator
     {
-        private static string username;
-        private static string hashedPassword;
-        private static bool authenticated;
+        public static User currentUser;
+        public static bool authenticated;
+
+        public static string errorMessage = "";
 
 
         public static bool Login(string username, string rawpassword)
         {
             if(username == "" || rawpassword == "")
             {
+                errorMessage = "Username or password field is empty.";
                 authenticated = false;
                 return false;
             }
 
-            Authenticator.username = username;
-            Authenticator.hashedPassword = SimpleHash.GenerateHashedPassword(username, rawpassword);
+            string hashedPassword = SimpleHash.GenerateHashedPassword(username, rawpassword);
+            currentUser = null;
 
-            if(IsValidEmail(username))
+            if (IsValidEmail(username))
             {
                 //resenar login
-                if(DBConnection.ConnectVerifyUser("SELECT * from resenar WHERE email = :username AND losenord = :hashedPassword", username, hashedPassword))
+                bool boolFound = false;
+                currentUser = DBConnection.ConnectVerifyResenar(username, hashedPassword, out boolFound, out errorMessage);
+                if (currentUser != null && boolFound)
                 {
-                    Console.WriteLine("User " + username + " is now authenticated!");
+                    authenticated = true;
+                    Console.WriteLine("Resenar " + username + " is now authenticated!");
+
+                    return true;
                 }
             }
             else
             {
                 //anstalld login
-                if (DBConnection.ConnectVerifyUser("SELECT * from anstalld WHERE pers_nr = :username AND losenord = :hashedPassword", username, hashedPassword))
+                bool boolFound = false;
+                currentUser = DBConnection.ConnectVerifyAnstalld(username, hashedPassword, out boolFound, out errorMessage);
+                if(currentUser != null && boolFound)
                 {
+                    authenticated = true;
                     Console.WriteLine("Anstalld " + username + " is now authenticated!");
+
+
+
+                    return true;
                 }
             }
 
