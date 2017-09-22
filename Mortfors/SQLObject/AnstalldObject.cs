@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Mortfors
 {
-    class Anstalld : User
+    class AnstalldObject : UserObject
     {
         public readonly string personNummer;
         public readonly bool isAdmin;
 
 
-        public Anstalld(string _personNummer, string _hashedPassword, bool _isAdmin, string _namn, string _address, string _telefon)
+        public AnstalldObject(string _personNummer, string _hashedPassword, bool _isAdmin, string _namn, string _address, string _telefon)
             : base(_hashedPassword, _namn, _address, _telefon)
         {
             personNummer = _personNummer;

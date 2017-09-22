@@ -8,7 +8,7 @@ namespace Mortfors
 {
     static class Authenticator
     {
-        public static User currentUser;
+        public static UserObject currentUser;
         public static bool authenticated;
 
         public static string errorMessage = "";
@@ -70,6 +70,26 @@ namespace Mortfors
             {
                 return false;
             }
+        }
+
+
+        public static string GetUserInfo()
+        {
+            string info = "";
+            if(currentUser.GetType() == typeof(ResenarObject))
+            {
+                info += "Resen�r "+ currentUser.namn+ " inloggad med email "+((ResenarObject)currentUser).email;
+            } else if (currentUser.GetType() == typeof(AnstalldObject))
+            {
+                info += "Anst�lld ";
+                if(((AnstalldObject)currentUser).isAdmin)
+                {
+                    info += "Admin ";
+                }
+
+                info += currentUser.namn+ " inloggad med personnummer "+((AnstalldObject)currentUser).personNummer;
+            }
+            return info;
         }
 
 

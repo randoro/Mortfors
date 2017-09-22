@@ -10,9 +10,9 @@
         <Grid HorizontalAlignment="Left" Height="328" Margin="10,10,0,0" VerticalAlignment="Top" Width="1121">
             <Label x:Name="l_bussresor" Content="Bussresor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="261"/>
             <Label x:Name="l_visar" Content="Visar 0 - 10 av 545" HorizontalAlignment="Left" Margin="702,0,0,0" VerticalAlignment="Top" Width="203" HorizontalContentAlignment="Right"/>
-            <Button x:Name="b_nasta" Content="Nästa 50 -&gt;" HorizontalAlignment="Left" Margin="999,3,0,0" VerticalAlignment="Top" Width="85"/>
-            <Button x:Name="b_forra" Content="&lt;- Förra 50" HorizontalAlignment="Left" Margin="910,3,0,0" VerticalAlignment="Top" Width="84"/>
-            <Button x:Name="b_uppdatera" Content="Uppdatera" HorizontalAlignment="Left" Margin="1089,3,-51,0" VerticalAlignment="Top" Width="83"/>
+            <Button x:Name="b_nasta" Content="Nästa 50 -&gt;" HorizontalAlignment="Left" Margin="999,3,0,0" VerticalAlignment="Top" Width="85" Click="b_nasta_Click"/>
+            <Button x:Name="b_forra" Content="&lt;- Förra 50" HorizontalAlignment="Left" Margin="910,3,0,0" VerticalAlignment="Top" Width="84" Click="b_forra_Click"/>
+            <Button x:Name="b_uppdatera" Content="Uppdatera" HorizontalAlignment="Left" Margin="1089,3,-51,0" VerticalAlignment="Top" Width="83" Click="b_uppdatera_Click"/>
             <ListView x:Name="lv_bussresor" HorizontalAlignment="Left" Height="267" VerticalAlignment="Top" Width="1172" Margin="0,26,-51,0">
                 <ListView.View>
                     <GridView>
@@ -48,7 +48,7 @@
         </Grid>
         <Grid HorizontalAlignment="Left" Margin="0,343,0,0" Width="1131" Height="132" VerticalAlignment="Top">
             <Label x:Name="l_verktyg" Content="Admin Verktyg" HorizontalAlignment="Left" VerticalAlignment="Top" Width="206" Margin="10,0,0,0"/>
-            <Button x:Name="b_hanterahallplats" Content="Hantera Hållplatser" HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top" Width="206"/>
+            <Button x:Name="b_hanterahallplatser" Content="Hantera Hållplatser" HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top" Width="206" Click="b_hanterahallplatser_Click"/>
             <Button x:Name="b_hanteraresenarer" Content="Hantera Resenärer" HorizontalAlignment="Left" Margin="10,51,0,0" VerticalAlignment="Top" Width="206"/>
             <Button x:Name="b_hanterabokningar" Content="Hantera Bokningar" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" Width="206"/>
             <Button x:Name="b_hanteraanstallda" Content="Hantera Anställda" HorizontalAlignment="Left" Margin="10,101,0,0" VerticalAlignment="Top" Width="206"/>

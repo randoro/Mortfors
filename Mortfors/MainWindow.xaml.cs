@@ -43,13 +43,13 @@ namespace Mortfors
             l_errormessage.Content = "";
             if(Authenticator.Login(tb_username.Text, pb_password.Password))
             {
-                if(Authenticator.currentUser.GetType() == typeof(Resenar))
+                if(Authenticator.currentUser.GetType() == typeof(ResenarObject))
                 {
                     ResenarWindow resenarWindow = new ResenarWindow();
                     resenarWindow.Show();
                     this.Close();
                 }
-                else if(Authenticator.currentUser.GetType() == typeof(Anstalld))
+                else if(Authenticator.currentUser.GetType() == typeof(AnstalldObject))
                 {
                     AnstalldWindow anstalldWindow = new AnstalldWindow();
                     anstalldWindow.Show();
@@ -74,13 +74,13 @@ namespace Mortfors
             l_errormessage.Content = "";
             if (Authenticator.Login("199301123395", "test123"))
             {
-                if (Authenticator.currentUser.GetType() == typeof(Resenar))
+                if (Authenticator.currentUser.GetType() == typeof(ResenarObject))
                 {
                     ResenarWindow resenarWindow = new ResenarWindow();
                     resenarWindow.Show();
                     this.Close();
                 }
-                else if (Authenticator.currentUser.GetType() == typeof(Anstalld))
+                else if (Authenticator.currentUser.GetType() == typeof(AnstalldObject))
                 {
                     AnstalldWindow anstalldWindow = new AnstalldWindow();
                     anstalldWindow.Show();

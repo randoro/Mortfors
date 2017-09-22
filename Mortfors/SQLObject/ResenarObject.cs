@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Mortfors
 {
-    class Resenar : User
+    class ResenarObject : UserObject
     {
         public readonly string email;
 
-        public Resenar(string _email, string _hashedPassword, string _namn, string _address, string _telefon)
+        public ResenarObject(string _email, string _hashedPassword, string _namn, string _address, string _telefon)
             : base(_hashedPassword, _namn, _address, _telefon)
         {
             email = _email;

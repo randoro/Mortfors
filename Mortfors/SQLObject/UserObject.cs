@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Mortfors
 {
-    abstract class User
+    abstract class UserObject
     {
         public readonly string hashedPassword;
         public readonly string namn;
         public readonly string address;
         public readonly string telefon;
         
-        public User(string _hashedPassword, string _namn, string _address, string _telefon)
+        public UserObject(string _hashedPassword, string _namn, string _address, string _telefon)
         {
             hashedPassword = _hashedPassword;
             namn = _namn;

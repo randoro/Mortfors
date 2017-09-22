@@ -42,11 +42,11 @@ namespace Mortfors
             return boolfound;
         }
 
-        public static Anstalld ConnectVerifyAnstalld(string username, string hashedPassword, out bool boolfound, out string errorMessage)
+        public static AnstalldObject ConnectVerifyAnstalld(string username, string hashedPassword, out bool boolfound, out string errorMessage)
         {
             boolfound = false;
             errorMessage = "";
-            Anstalld user = null;
+            AnstalldObject user = null;
             NpgsqlConnection conn = null;
 
             try
@@ -72,7 +72,7 @@ namespace Mortfors
                         string address = dr.GetFieldValue<string>(dr.GetOrdinal("address"));
                         string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("hem_telefon"));
 
-                        user = new Anstalld(personNummer, _hashedPassword, isAdmin, namn, address, telefon);
+                        user = new AnstalldObject(personNummer, _hashedPassword, isAdmin, namn, address, telefon);
                         boolfound = true;
                     }
                     if (boolfound == false)
@@ -92,11 +92,11 @@ namespace Mortfors
             return user;
         }
 
-        public static Resenar ConnectVerifyResenar(string username, string hashedPassword, out bool boolfound, out string errorMessage)
+        public static ResenarObject ConnectVerifyResenar(string username, string hashedPassword, out bool boolfound, out string errorMessage)
         {
             boolfound = false;
             errorMessage = "";
-            Resenar user = null;
+            ResenarObject user = null;
             NpgsqlConnection conn = null;
 
             try
@@ -122,7 +122,7 @@ namespace Mortfors
                         string address = dr.GetFieldValue<string>(dr.GetOrdinal("address"));
                         string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("telefon"));
 
-                        user = new Resenar(email, _hashedPassword, namn, address, telefon);
+                        user = new ResenarObject(email, _hashedPassword, namn, address, telefon);
                         boolfound = true;
                     }
                     if (boolfound == false)
@@ -143,11 +143,11 @@ namespace Mortfors
             return user;
         }
 
-        public static List<Bussresa> ConnectSelectBussResor(int limit, int offset, out bool boolfound, out string errorMessage)
+        public static List<BussresaObject> ConnectSelectBussResor(int limit, int offset, out bool boolfound, out string errorMessage)
         {
             boolfound = false;
             errorMessage = "";
-            List<Bussresa> resor = null;
+            List<BussresaObject> resor = null;
             NpgsqlConnection conn = null;
 
             try
@@ -161,7 +161,7 @@ namespace Mortfors
 
                 Console.WriteLine("Executing command: " + cmd.CommandText);
                 Console.WriteLine("Executing statements: " + dr.Statements[0]);
-                resor = new List<Bussresa>();
+                resor = new List<BussresaObject>();
 
                 using (dr)
                 {
@@ -184,7 +184,7 @@ namespace Mortfors
                             chaffor_id = dr.GetFieldValue<string>(dr.GetOrdinal("chaffor_id"));
                         }
                         
-                        resor.Add(new Bussresa(bussresa_id, avgangs_address, avgangs_stad, avgangs_land, avgangs_datum, 
+                        resor.Add(new BussresaObject(bussresa_id, avgangs_address, avgangs_stad, avgangs_land, avgangs_datum, 
                             ankomst_address, ankomst_stad, ankomst_land, ankomst_datum, kostnad, max_platser, chaffor_id));
                         boolfound = true;
                     }
@@ -205,6 +205,50 @@ namespace Mortfors
                 conn.Close();
             }
             return resor;
+        }
+
+
+        public static int ConnectCountBussResor(out bool boolfound, out string errorMessage)
+        {
+            boolfound = false;
+            errorMessage = "";
+            NpgsqlConnection conn = null;
+            int count = 0;
+
+            try
+            {
+                conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
+                conn.Open();
+                NpgsqlCommand cmd = new NpgsqlCommand("SELECT count(*) from bussresa;", conn);
+                NpgsqlDataReader dr = cmd.ExecuteReader();
+
+                Console.WriteLine("Executing command: " + cmd.CommandText);
+                Console.WriteLine("Executing statements: " + dr.Statements[0]);
+
+                using (dr)
+                {
+                    while (dr.Read())
+                    {
+                        count = dr.GetFieldValue<int>(0);
+                        boolfound = true;
+                    }
+                    if (boolfound == false)
+                    {
+                        //No entries
+                        //errorMessage = "Wrong username or password.";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = "Could not connect to database.";
+                Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return count;
         }
 
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mortfors
 {
-    class Bussresa
+    class BussresaObject
     {
         public int bussresa_id { get; set; }
         public string avgangs_address { get; set; }
@@ -21,7 +21,7 @@ namespace Mortfors
         public int max_platser { get; set; }
         public string chaffor_id { get; set; }
 
-        public Bussresa(int _bussresa_id, string _avgangs_address, string _avgangs_stad, string _avgangs_land, DateTime _avgangs_datum,
+        public BussresaObject(int _bussresa_id, string _avgangs_address, string _avgangs_stad, string _avgangs_land, DateTime _avgangs_datum,
             string _ankomst_address, string _ankomst_stad, string _ankomst_land, DateTime _ankomst_datum, int _kostnad, int _max_platser, string _chaffor_id)
         {
             bussresa_id = _bussresa_id;
