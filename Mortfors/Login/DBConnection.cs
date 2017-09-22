@@ -69,10 +69,10 @@ namespace Mortfors
                         string _hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("losenord"));
                         bool isAdmin = ((dr.GetFieldValue<Int32>(dr.GetOrdinal("admin")) == 0) ? false : true);
                         string namn = dr.GetFieldValue<string>(dr.GetOrdinal("namn"));
-                        string address = dr.GetFieldValue<string>(dr.GetOrdinal("address"));
+                        string adress = dr.GetFieldValue<string>(dr.GetOrdinal("adress"));
                         string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("hem_telefon"));
 
-                        user = new AnstalldObject(personNummer, _hashedPassword, isAdmin, namn, address, telefon);
+                        user = new AnstalldObject(personNummer, _hashedPassword, isAdmin, namn, adress, telefon);
                         boolfound = true;
                     }
                     if (boolfound == false)
@@ -119,10 +119,10 @@ namespace Mortfors
                         string email = dr.GetFieldValue<string>(dr.GetOrdinal("email"));
                         string _hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("losenord"));
                         string namn = dr.GetFieldValue<string>(dr.GetOrdinal("namn"));
-                        string address = dr.GetFieldValue<string>(dr.GetOrdinal("address"));
+                        string adress = dr.GetFieldValue<string>(dr.GetOrdinal("adress"));
                         string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("telefon"));
 
-                        user = new ResenarObject(email, _hashedPassword, namn, address, telefon);
+                        user = new ResenarObject(email, _hashedPassword, namn, adress, telefon);
                         boolfound = true;
                     }
                     if (boolfound == false)
@@ -168,11 +168,11 @@ namespace Mortfors
                     while (dr.Read())
                     {
                         int bussresa_id = dr.GetFieldValue<int>(dr.GetOrdinal("bussresa_id"));
-                        string avgangs_address = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_address"));
+                        string avgangs_adress = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_adress"));
                         string avgangs_stad = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_stad"));
                         string avgangs_land = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_land"));
                         DateTime avgangs_datum = dr.GetFieldValue<DateTime>(dr.GetOrdinal("avgangs_datum"));
-                        string ankomst_address = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_address"));
+                        string ankomst_adress = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_adress"));
                         string ankomst_stad = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_stad"));
                         string ankomst_land = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_land"));
                         DateTime ankomst_datum = dr.GetFieldValue<DateTime>(dr.GetOrdinal("ankomst_datum"));
@@ -184,8 +184,8 @@ namespace Mortfors
                             chaffor_id = dr.GetFieldValue<string>(dr.GetOrdinal("chaffor_id"));
                         }
                         
-                        resor.Add(new BussresaObject(bussresa_id, avgangs_address, avgangs_stad, avgangs_land, avgangs_datum, 
-                            ankomst_address, ankomst_stad, ankomst_land, ankomst_datum, kostnad, max_platser, chaffor_id));
+                        resor.Add(new BussresaObject(bussresa_id, avgangs_adress, avgangs_stad, avgangs_land, avgangs_datum, 
+                            ankomst_adress, ankomst_stad, ankomst_land, ankomst_datum, kostnad, max_platser, chaffor_id));
                         boolfound = true;
                     }
                     if (boolfound == false)

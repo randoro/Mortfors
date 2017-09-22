@@ -17,11 +17,11 @@
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Bussresa ID" Width="80" DisplayMemberBinding="{Binding bussresa_id}" />
-                        <GridViewColumn Header="Avg. Address" Width="100" DisplayMemberBinding="{Binding avgangs_address}" />
+                        <GridViewColumn Header="Avg. adress" Width="100" DisplayMemberBinding="{Binding avgangs_adress}" />
                         <GridViewColumn Header="Avg. Stad" Width="100" DisplayMemberBinding="{Binding avgangs_stad}" />
                         <GridViewColumn Header="Avg. Land" Width="100" DisplayMemberBinding="{Binding avgangs_land}" />
                         <GridViewColumn Header="Avg. Datum/Tid" Width="120" DisplayMemberBinding="{Binding avgangs_datum}" />
-                        <GridViewColumn Header="Ank. Address" Width="100" DisplayMemberBinding="{Binding ankomst_address}" />
+                        <GridViewColumn Header="Ank. adress" Width="100" DisplayMemberBinding="{Binding ankomst_adress}" />
                         <GridViewColumn Header="Ank. Stad" Width="100" DisplayMemberBinding="{Binding ankomst_stad}" />
                         <GridViewColumn Header="Ank. Land" Width="100" DisplayMemberBinding="{Binding ankomst_land}" />
                         <GridViewColumn Header="Ank. Datum/Tid" Width="120" DisplayMemberBinding="{Binding ankomst_datum}" />

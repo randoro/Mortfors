@@ -17,7 +17,7 @@
             <ListView x:Name="lv_hallplatser" HorizontalAlignment="Left" Height="267" VerticalAlignment="Top" Width="564" Margin="0,26,0,0">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Gatuaddress" Width="280" DisplayMemberBinding="{Binding gatu_address}" />
+                        <GridViewColumn Header="Gatuadress" Width="280" DisplayMemberBinding="{Binding gatu_adress}" />
                         <GridViewColumn Header="Stad" Width="140" DisplayMemberBinding="{Binding stad}" />
                         <GridViewColumn Header="Land" Width="140" DisplayMemberBinding="{Binding land}" />
                         <!--<GridViewColumn Header="Mail" Width="150">

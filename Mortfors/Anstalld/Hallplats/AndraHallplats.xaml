@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="AndraHallplats" Height="187.025" Width="334.178">
     <Grid>
-        <Label x:Name="l_gatuaddress" Content="Gatuaddress:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="tb_gatuaddress" HorizontalAlignment="Left" Height="23" Margin="93,13,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="217"/>
+        <Label x:Name="l_gatuadress" Content="Gatuadress:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb_gatuadress" HorizontalAlignment="Left" Height="23" Margin="93,13,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="217"/>
         <Label x:Name="l_stad" Content="Stad:" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tb_stad" HorizontalAlignment="Left" Height="23" Margin="93,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="217"/>
         <Label x:Name="l_land" Content="Land:" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top"/>
