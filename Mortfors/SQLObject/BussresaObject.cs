@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mortfors
+namespace Mortfors.SQLObject
 {
-    class BussresaObject
+    public class BussresaObject
     {
         public int bussresa_id { get; set; }
         public string avgangs_adress { get; set; }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mortfors
+namespace Mortfors.SQLObject
 {
-    class ResenarObject : UserObject
+    public class ResenarObject : UserObject
     {
         public readonly string email;
 

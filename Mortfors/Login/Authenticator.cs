@@ -1,10 +1,11 @@
+using Mortfors.SQLObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mortfors
+namespace Mortfors.Login
 {
     static class Authenticator
     {
@@ -78,10 +79,10 @@ namespace Mortfors
             string info = "";
             if(currentUser.GetType() == typeof(ResenarObject))
             {
-                info += "Resen�r "+ currentUser.namn+ " inloggad med email "+((ResenarObject)currentUser).email;
+                info += "Resenär "+ currentUser.namn+ " inloggad med email "+((ResenarObject)currentUser).email;
             } else if (currentUser.GetType() == typeof(AnstalldObject))
             {
-                info += "Anst�lld ";
+                info += "Anställd ";
                 if(((AnstalldObject)currentUser).isAdmin)
                 {
                     info += "Admin ";

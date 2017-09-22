@@ -1,3 +1,4 @@
+using Mortfors.SQLObject;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -5,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mortfors
+namespace Mortfors.Login
 {
     static class DBConnection
     {
@@ -143,6 +144,49 @@ namespace Mortfors
             return user;
         }
 
+        public static int ConnectCountBussResor(out bool boolfound, out string errorMessage)
+        {
+            boolfound = false;
+            errorMessage = "";
+            NpgsqlConnection conn = null;
+            int count = 0;
+
+            try
+            {
+                conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
+                conn.Open();
+                NpgsqlCommand cmd = new NpgsqlCommand("SELECT count(*) from bussresa;", conn);
+                NpgsqlDataReader dr = cmd.ExecuteReader();
+
+                Console.WriteLine("Executing command: " + cmd.CommandText);
+                Console.WriteLine("Executing statements: " + dr.Statements[0]);
+
+                using (dr)
+                {
+                    while (dr.Read())
+                    {
+                        count = dr.GetFieldValue<int>(0);
+                        boolfound = true;
+                    }
+                    if (boolfound == false)
+                    {
+                        //No entries
+                        //errorMessage = "Wrong username or password.";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = "Could not connect to database.";
+                Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return count;
+        }
+
         public static List<BussresaObject> ConnectSelectBussResor(int limit, int offset, out bool boolfound, out string errorMessage)
         {
             boolfound = false;
@@ -207,8 +251,7 @@ namespace Mortfors
             return resor;
         }
 
-
-        public static int ConnectCountBussResor(out bool boolfound, out string errorMessage)
+        public static int ConnectCountHallplatser(out bool boolfound, out string errorMessage)
         {
             boolfound = false;
             errorMessage = "";
@@ -219,7 +262,7 @@ namespace Mortfors
             {
                 conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
                 conn.Open();
-                NpgsqlCommand cmd = new NpgsqlCommand("SELECT count(*) from bussresa;", conn);
+                NpgsqlCommand cmd = new NpgsqlCommand("SELECT count(*) from hallplats;", conn);
                 NpgsqlDataReader dr = cmd.ExecuteReader();
 
                 Console.WriteLine("Executing command: " + cmd.CommandText);
@@ -251,7 +294,98 @@ namespace Mortfors
             return count;
         }
 
+        public static List<HallplatsObject> ConnectSelectHallplatser(int limit, int offset, out bool boolfound, out string errorMessage)
+        {
+            boolfound = false;
+            errorMessage = "";
+            List<HallplatsObject> hallplatser = null;
+            NpgsqlConnection conn = null;
 
+            try
+            {
+                conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
+                conn.Open();
+                NpgsqlCommand cmd = new NpgsqlCommand("SELECT * from hallplats order by lower(gatu_adress), lower(stad), lower(land) limit :limit offset :offset;", conn);
+                cmd.Parameters.Add(new NpgsqlParameter(":limit", limit));
+                cmd.Parameters.Add(new NpgsqlParameter(":offset", offset));
+                NpgsqlDataReader dr = cmd.ExecuteReader();
+
+                Console.WriteLine("Executing command: " + cmd.CommandText);
+                Console.WriteLine("Executing statements: " + dr.Statements[0]);
+                hallplatser = new List<HallplatsObject>();
+
+                using (dr)
+                {
+                    while (dr.Read())
+                    {
+                        string gatu_adress = dr.GetFieldValue<string>(dr.GetOrdinal("gatu_adress"));
+                        string stad = dr.GetFieldValue<string>(dr.GetOrdinal("stad"));
+                        string land = dr.GetFieldValue<string>(dr.GetOrdinal("land"));
+                        
+                        hallplatser.Add(new HallplatsObject(gatu_adress, stad, land));
+                        boolfound = true;
+                    }
+                    if (boolfound == false)
+                    {
+                        //No entries
+                        //errorMessage = "Wrong username or password.";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = "Could not connect to database.";
+                Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return hallplatser;
+        }
+
+        public static void ConnectInsertHallplats(HallplatsObject newObject, out bool boolfound, out string errorMessage)
+        {
+            boolfound = false;
+            errorMessage = "";
+            NpgsqlConnection conn = null;
+
+            try
+            {
+                conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
+                conn.Open();
+                NpgsqlCommand cmd = new NpgsqlCommand("INSERT INTO hallplats (gatu_adress, stad, land) values (:gatu_adress, :stad, :land);", conn);
+                cmd.Parameters.Add(new NpgsqlParameter(":gatu_adress", newObject.gatu_adress));
+                cmd.Parameters.Add(new NpgsqlParameter(":stad", newObject.stad));
+                cmd.Parameters.Add(new NpgsqlParameter(":land", newObject.land));
+                NpgsqlDataReader dr = cmd.ExecuteReader();
+
+                Console.WriteLine("Executing command: " + cmd.CommandText);
+                Console.WriteLine("Executing statements: " + dr.Statements[0]);
+
+                using (dr)
+                {
+                    while (dr.Read())
+                    {
+                        boolfound = true;
+                    }
+                    if (boolfound == false)
+                    {
+                        //No entries
+                        //errorMessage = "Wrong username or password.";
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                errorMessage = "Could not connect to database.";
+                Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
 
     }
 }

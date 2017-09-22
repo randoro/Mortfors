@@ -1,3 +1,5 @@
+using Mortfors.Login;
+using Mortfors.SQLObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +35,7 @@ namespace Mortfors
         {
             InitializeComponent();
             SetPermissions();
-            this.Title = "Mortfors - V�lkommen " + Authenticator.GetUserInfo() + ".";
+            this.Title = "Mortfors - Välkommen " + Authenticator.GetUserInfo() + ".";
             UpdateBussResor();
 
         }

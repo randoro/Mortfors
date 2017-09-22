@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mortfors
+namespace Mortfors.SQLObject
 {
-    abstract class UserObject
+    public abstract class UserObject
     {
         public readonly string hashedPassword;
         public readonly string namn;

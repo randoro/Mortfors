@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mortfors
+namespace Mortfors.SQLObject
 {
-    class AnstalldObject : UserObject
+    public class AnstalldObject : UserObject
     {
         public readonly string personNummer;
         public readonly bool isAdmin;

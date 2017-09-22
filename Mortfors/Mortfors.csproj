@@ -74,6 +74,7 @@
     <Compile Include="Anstalld\Hallplats\HallplatsWindow.xaml.cs">
       <DependentUpon>HallplatsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SQLObject\HallplatsObject.cs" />
     <Compile Include="SQLObject\ResenarObject.cs" />
     <Compile Include="Resenar\ResenarWindow.xaml.cs">
       <DependentUpon>ResenarWindow.xaml</DependentUpon>
