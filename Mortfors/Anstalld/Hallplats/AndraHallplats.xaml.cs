@@ -22,14 +22,17 @@ namespace Mortfors
     /// </summary>
     public partial class AndraHallplats : Window
     {
-        HallplatsWindow parent;
-        HallplatsObject oldObject;
+        public HallplatsWindow parentWindow;
+        readonly HallplatsObject oldObject;
+        bool newhallplats;
+        string errorMessage = "";
 
         public AndraHallplats(HallplatsWindow _parent)
         {
             InitializeComponent();
             Title = "Ny Hållplats - " + Authenticator.GetUserInfo();
-            parent = _parent;
+            parentWindow = _parent;
+            newhallplats = true;
         }
 
         public AndraHallplats(HallplatsWindow _parent, HallplatsObject _oldObject)
@@ -37,25 +40,41 @@ namespace Mortfors
             InitializeComponent();
             Title = "Redigera Hållplats - " + Authenticator.GetUserInfo();
             oldObject = _oldObject;
-            parent = _parent;
+            tb_gatuadress.Text = oldObject.gatu_adress;
+            tb_stad.Text = oldObject.stad;
+            tb_land.Text = oldObject.land;
+            parentWindow = _parent;
+            newhallplats = false;
         }
 
         void AndraHallplatsWindow_Closing(object sender, CancelEventArgs e)
         {
-            parent.b_nyhallplats.IsEnabled = true;
-            parent.b_redigeramarkerad.IsEnabled = true;
-            parent.b_tabortmarkerad.IsEnabled = true;
+            parentWindow.b_nyhallplats.IsEnabled = true;
+            parentWindow.b_redigeramarkerad.IsEnabled = true;
+            parentWindow.b_tabortmarkerad.IsEnabled = true;
         }
 
         private void b_spara_Click(object sender, RoutedEventArgs e)
         {
             //Fix Check if empty!
-            oldObject = new HallplatsObject(tb_gatuadress.Text, tb_stad.Text, tb_land.Text);
+            if(tb_gatuadress.Text == "" || tb_stad.Text == "" || tb_land.Text == "")
+            {
+                errorMessage = "One or more fields are empty.";
+                return;
+            }
+            HallplatsObject newObject = new HallplatsObject(tb_gatuadress.Text, tb_stad.Text, tb_land.Text);
 
+            if(newhallplats)
+            {
+                DBConnection.InsertHallplats(newObject);
+            }
+            else
+            {
+                DBConnection.UpdateHallplats(newObject, oldObject);
+            }
 
-            bool boolFound = false;
-            string errorMessage = "";
-            DBConnection.ConnectInsertHallplats(oldObject, out boolFound, out errorMessage);
+            parentWindow.parentWindow.UpdateAllChain();
+
             Close(); //Check if ok?
         }
 

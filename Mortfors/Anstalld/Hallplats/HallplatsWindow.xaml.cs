@@ -22,12 +22,11 @@ namespace Mortfors
     /// </summary>
     public partial class HallplatsWindow : Window
     {
-        AnstalldWindow parent;
+        public AnstalldWindow parentWindow;
         AndraHallplats andraHallplats;
         List<HallplatsObject> hallplatsObject;
 
-
-        public string errorMessage = "";
+        
         const int limit = 2;
         public int offset = 0;
         public int count = 0;
@@ -35,23 +34,23 @@ namespace Mortfors
         public HallplatsWindow(AnstalldWindow _parent)
         {
             InitializeComponent();
-            parent = _parent;
+            parentWindow = _parent;
             hallplatsObject = new List<HallplatsObject>();
             this.Title = "Hantera Hållplatser - Välkommen " + Authenticator.GetUserInfo() + ".";
+            UpdateHallplatser();
 
         }
 
         void HallplatsWindow_Closing(object sender, CancelEventArgs e)
         {
-            parent.b_hanterahallplatser.IsEnabled = true;
+            parentWindow.b_hanterahallplatser.IsEnabled = true;
         }
 
         public void UpdateHallplatser()
         {
-            bool found = false;
-            count = DBConnection.ConnectCountHallplatser(out found, out errorMessage);
-            bool found2 = false;
-            hallplatsObject = DBConnection.ConnectSelectHallplatser(limit, offset, out found2, out errorMessage);
+            
+            count = DBConnection.CountHallplatser();
+            hallplatsObject = DBConnection.SelectHallplatser(limit, offset);
             lv_hallplatser.ItemsSource = hallplatsObject;
             l_visar.Content = "Visar " + offset + " - " + (offset + limit) + " av " + count + ".";
             DisableButtons();
@@ -101,8 +100,6 @@ namespace Mortfors
         private void b_uppdatera_Click(object sender, RoutedEventArgs e)
         {
             UpdateHallplatser();
-            HallplatsObject a = hallplatsObject[0];
-            Console.WriteLine("Gatuadress:" + a.gatu_adress + " Stad:" + a.stad + " Land:" + a.land);
         }
 
         private void b_nyhallplats_Click(object sender, RoutedEventArgs e)
@@ -117,20 +114,24 @@ namespace Mortfors
 
         private void b_redigeramarkerad_Click(object sender, RoutedEventArgs e)
         {
-            andraHallplats = new AndraHallplats(this, new SQLObject.HallplatsObject("", "", "")); //Fix
-            andraHallplats.Show();
-            b_nyhallplats.IsEnabled = false;
-            b_redigeramarkerad.IsEnabled = false;
-            b_tabortmarkerad.IsEnabled = false;
+            if (lv_hallplatser.SelectedItem != null)
+            {
+                andraHallplats = new AndraHallplats(this, (HallplatsObject)lv_hallplatser.SelectedItem);
+                andraHallplats.Show();
+                b_nyhallplats.IsEnabled = false;
+                b_redigeramarkerad.IsEnabled = false;
+                b_tabortmarkerad.IsEnabled = false;
+            }
         }
 
         private void b_tabortmarkerad_Click(object sender, RoutedEventArgs e)
         {
-            
-            b_nyhallplats.IsEnabled = false;
-            b_redigeramarkerad.IsEnabled = false;
-            b_tabortmarkerad.IsEnabled = false;
-            //Fix
+            if (lv_hallplatser.SelectedItem != null)
+            {
+                DBConnection.DeleteHallplats((HallplatsObject)lv_hallplatser.SelectedItem);
+                
+                
+            }
         }
     }
 }

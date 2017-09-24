@@ -24,9 +24,7 @@ namespace Mortfors
 
 
         HallplatsWindow hallplatsWindow;
-
-
-        public string errorMessage = "";
+        
         const int limit = 2;
         public int offset = 0;
         public int count = 0;
@@ -67,12 +65,19 @@ namespace Mortfors
 
         public void UpdateBussResor()
         {
-            bool found = false;
-            count = DBConnection.ConnectCountBussResor(out found, out errorMessage);
-            bool found2 = false;
-            lv_bussresor.ItemsSource = DBConnection.ConnectSelectBussResor(limit, offset, out found2, out errorMessage);
+            count = DBConnection.CountBussResor();
+            lv_bussresor.ItemsSource = DBConnection.SelectBussResor(limit, offset);
             l_visar.Content = "Visar "+ offset + " - "+ (offset+limit) + " av " + count + ".";
             DisableButtons();
+        }
+
+        public void UpdateAllChain()
+        {
+            UpdateBussResor();
+            if (hallplatsWindow != null && hallplatsWindow.Visibility == Visibility.Visible)
+            {
+                hallplatsWindow.UpdateHallplatser();
+            }
         }
 
         public void DisableButtons()

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Mortfors.Login
 {
@@ -15,6 +16,131 @@ namespace Mortfors.Login
         const string userID = "ae7076";
         const string password = "xvkkumqd";
         const string database = "ae7076";
+
+        public static string ErrorMessage = "";
+
+        /// <summary>
+        /// For getting rows, SELECT
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        private static NpgsqlConnection OpenConnectionAndGetReader(string query, out NpgsqlDataReader reader, params object[] parameters)
+        {
+            NpgsqlConnection conn = null;
+            reader = null;
+
+            try
+            {
+                conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
+                conn.Open();
+                NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter(":p" + i.ToString(), parameters[i]));
+                }
+                reader = cmd.ExecuteReader();
+
+                Console.WriteLine("Query (Reader) command executed: " + cmd.CommandText);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception Message: " + e.Message);
+                Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
+            }
+            return conn;
+        }
+
+        /// <summary>
+        /// For getting single values, COUNT, SUM
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        private static int ExecuteAndGetScalar(string query, params object[] parameters)
+        {
+            NpgsqlConnection conn = null;
+            int number = -1;
+
+            try
+            {
+                conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
+                conn.Open();
+                NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter(":p" + i.ToString(), parameters[i]));
+                }
+                number = Convert.ToInt32(cmd.ExecuteScalar());
+
+
+                Console.WriteLine("Scalar command executed: " + cmd.CommandText);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception Message: " + e.Message);
+                Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return number;
+        }
+
+
+        /// <summary>
+        /// For getting affected rows, INSERT, DELETE, UPDATE
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        private static int ExecuteAndGetNonQuery(string query, params object[] parameters)
+        {
+            NpgsqlConnection conn = null;
+            int number = -1;
+
+            try
+            {
+                conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
+                conn.Open();
+                NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter(":p" + i.ToString(), parameters[i]));
+                }
+                number = cmd.ExecuteNonQuery();
+
+
+                Console.WriteLine("NonQuery command executed: " + cmd.CommandText);
+
+            }
+            catch (PostgresException e)
+            {
+                ErrorMessage = e.Message;
+                switch (e.SqlState)
+                {
+                    case "23503":
+                        ErrorMessage = "Främmande nyckel fel.";
+                        break;
+                    default:
+                        break;
+                }
+                
+                Console.WriteLine("Exception Message: " + e.Message);
+                Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return number;
+        }
 
         public static bool ConnectAndGetVersion()
         {
@@ -43,348 +169,184 @@ namespace Mortfors.Login
             return boolfound;
         }
 
-        public static AnstalldObject ConnectVerifyAnstalld(string username, string hashedPassword, out bool boolfound, out string errorMessage)
+        public static AnstalldObject VerifyAnstalld(string username, string hashedPassword)
         {
-            boolfound = false;
-            errorMessage = "";
-            AnstalldObject user = null;
+            ErrorMessage = "Wrong username or password.";
+            AnstalldObject returnObj = null;
+
             NpgsqlConnection conn = null;
+            NpgsqlDataReader dr = null;
 
             try
             {
-                conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
-                conn.Open();
-                NpgsqlCommand cmd = new NpgsqlCommand("SELECT * from anstalld WHERE pers_nr = :username AND losenord = :hashedPassword;", conn);
-                cmd.Parameters.Add(new NpgsqlParameter(":username", username));
-                cmd.Parameters.Add(new NpgsqlParameter(":hashedPassword", hashedPassword));
-                NpgsqlDataReader dr = cmd.ExecuteReader();
-
-                Console.WriteLine("Executing command: " + cmd.CommandText);
-                Console.WriteLine("Executing statements: " + dr.Statements[0]);
-                
-                using (dr)
+                conn = OpenConnectionAndGetReader("SELECT * from anstalld WHERE pers_nr = :p0 AND losenord = :p1;", out dr, username, hashedPassword);
+                if (dr.Read())
                 {
-                    if (dr.Read())
-                    {
-                        string personNummer = dr.GetFieldValue<string>(dr.GetOrdinal("pers_nr"));
-                        string _hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("losenord"));
-                        bool isAdmin = ((dr.GetFieldValue<Int32>(dr.GetOrdinal("admin")) == 0) ? false : true);
-                        string namn = dr.GetFieldValue<string>(dr.GetOrdinal("namn"));
-                        string adress = dr.GetFieldValue<string>(dr.GetOrdinal("adress"));
-                        string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("hem_telefon"));
+                    string personNummer = dr.GetFieldValue<string>(dr.GetOrdinal("pers_nr"));
+                    string _hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("losenord"));
+                    bool isAdmin = ((dr.GetFieldValue<Int32>(dr.GetOrdinal("admin")) == 0) ? false : true);
+                    string namn = dr.GetFieldValue<string>(dr.GetOrdinal("namn"));
+                    string adress = dr.GetFieldValue<string>(dr.GetOrdinal("adress"));
+                    string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("hem_telefon"));
 
-                        user = new AnstalldObject(personNummer, _hashedPassword, isAdmin, namn, adress, telefon);
-                        boolfound = true;
-                    }
-                    if (boolfound == false)
-                    {
-                        errorMessage = "Wrong username or password.";
-                    }
+                    returnObj = new AnstalldObject(personNummer, _hashedPassword, isAdmin, namn, adress, telefon);
+                    ErrorMessage = "";
                 }
-            } catch (Exception e)
-            {
-                errorMessage = "Could not connect to database.";
-                Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
+
             }
             finally
             {
                 conn.Close();
             }
-            return user;
+            return returnObj;
         }
 
-        public static ResenarObject ConnectVerifyResenar(string username, string hashedPassword, out bool boolfound, out string errorMessage)
+        public static ResenarObject VerifyResenar(string username, string hashedPassword)
         {
-            boolfound = false;
-            errorMessage = "";
-            ResenarObject user = null;
+            ErrorMessage = "Wrong username or password.";
+            ResenarObject returnObj = null;
+
             NpgsqlConnection conn = null;
+            NpgsqlDataReader dr = null;
 
             try
             {
-                conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
-                conn.Open();
-                NpgsqlCommand cmd = new NpgsqlCommand("SELECT * from resenar WHERE email = :username AND losenord = :hashedPassword;", conn);
-                cmd.Parameters.Add(new NpgsqlParameter(":username", username));
-                cmd.Parameters.Add(new NpgsqlParameter(":hashedPassword", hashedPassword));
-                NpgsqlDataReader dr = cmd.ExecuteReader();
-
-                Console.WriteLine("Executing command: " + cmd.CommandText);
-                Console.WriteLine("Executing statements: " + dr.Statements[0]);
-                
-
-                using (dr)
+                conn = OpenConnectionAndGetReader("SELECT * from resenar WHERE email = :p0 AND losenord = :p1;", out dr, username, hashedPassword);
+                if (dr.Read())
                 {
-                    if (dr.Read())
-                    {
-                        string email = dr.GetFieldValue<string>(dr.GetOrdinal("email"));
-                        string _hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("losenord"));
-                        string namn = dr.GetFieldValue<string>(dr.GetOrdinal("namn"));
-                        string adress = dr.GetFieldValue<string>(dr.GetOrdinal("adress"));
-                        string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("telefon"));
+                    string email = dr.GetFieldValue<string>(dr.GetOrdinal("email"));
+                    string _hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("losenord"));
+                    string namn = dr.GetFieldValue<string>(dr.GetOrdinal("namn"));
+                    string adress = dr.GetFieldValue<string>(dr.GetOrdinal("adress"));
+                    string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("telefon"));
 
-                        user = new ResenarObject(email, _hashedPassword, namn, adress, telefon);
-                        boolfound = true;
-                    }
-                    if (boolfound == false)
-                    {
-                        errorMessage = "Wrong username or password.";
-                    }
+                    returnObj = new ResenarObject(email, _hashedPassword, namn, adress, telefon);
+                    ErrorMessage = "";
                 }
-            }
-            catch (Exception e)
-            {
-                errorMessage = "Could not connect to database.";
-                Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
+
             }
             finally
             {
                 conn.Close();
             }
-            return user;
+            return returnObj;
+            
         }
 
-        public static int ConnectCountBussResor(out bool boolfound, out string errorMessage)
+        public static int CountBussResor()
         {
-            boolfound = false;
-            errorMessage = "";
-            NpgsqlConnection conn = null;
             int count = 0;
-
-            try
-            {
-                conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
-                conn.Open();
-                NpgsqlCommand cmd = new NpgsqlCommand("SELECT count(*) from bussresa;", conn);
-                NpgsqlDataReader dr = cmd.ExecuteReader();
-
-                Console.WriteLine("Executing command: " + cmd.CommandText);
-                Console.WriteLine("Executing statements: " + dr.Statements[0]);
-
-                using (dr)
-                {
-                    while (dr.Read())
-                    {
-                        count = dr.GetFieldValue<int>(0);
-                        boolfound = true;
-                    }
-                    if (boolfound == false)
-                    {
-                        //No entries
-                        //errorMessage = "Wrong username or password.";
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                errorMessage = "Could not connect to database.";
-                Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
-            }
-            finally
-            {
-                conn.Close();
-            }
+            count = ExecuteAndGetScalar("SELECT count(*) from bussresa;");
             return count;
         }
 
-        public static List<BussresaObject> ConnectSelectBussResor(int limit, int offset, out bool boolfound, out string errorMessage)
+        public static List<BussresaObject> SelectBussResor(int limit, int offset)
         {
-            boolfound = false;
-            errorMessage = "";
-            List<BussresaObject> resor = null;
+            List<BussresaObject> returnObj = new List<BussresaObject>();
+
             NpgsqlConnection conn = null;
+            NpgsqlDataReader dr = null;
 
             try
             {
-                conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
-                conn.Open();
-                NpgsqlCommand cmd = new NpgsqlCommand("SELECT * from bussresa order by bussresa_id limit :limit offset :offset;", conn);
-                cmd.Parameters.Add(new NpgsqlParameter(":limit", limit));
-                cmd.Parameters.Add(new NpgsqlParameter(":offset", offset));
-                NpgsqlDataReader dr = cmd.ExecuteReader();
-
-                Console.WriteLine("Executing command: " + cmd.CommandText);
-                Console.WriteLine("Executing statements: " + dr.Statements[0]);
-                resor = new List<BussresaObject>();
-
-                using (dr)
+                conn = OpenConnectionAndGetReader("SELECT * from bussresa order by bussresa_id limit :p0 offset :p1;", out dr, limit, offset);
+                while (dr.Read())
                 {
-                    while (dr.Read())
+                    int bussresa_id = dr.GetFieldValue<int>(dr.GetOrdinal("bussresa_id"));
+                    string avgangs_adress = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_adress"));
+                    string avgangs_stad = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_stad"));
+                    string avgangs_land = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_land"));
+                    DateTime avgangs_datum = dr.GetFieldValue<DateTime>(dr.GetOrdinal("avgangs_datum"));
+                    string ankomst_adress = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_adress"));
+                    string ankomst_stad = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_stad"));
+                    string ankomst_land = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_land"));
+                    DateTime ankomst_datum = dr.GetFieldValue<DateTime>(dr.GetOrdinal("ankomst_datum"));
+                    int kostnad = dr.GetFieldValue<int>(dr.GetOrdinal("kostnad"));
+                    int max_platser = dr.GetFieldValue<int>(dr.GetOrdinal("max_platser"));
+                    string chaffor_id = null;
+                    if (!dr.IsDBNull(dr.GetOrdinal("chaffor_id")))
                     {
-                        int bussresa_id = dr.GetFieldValue<int>(dr.GetOrdinal("bussresa_id"));
-                        string avgangs_adress = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_adress"));
-                        string avgangs_stad = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_stad"));
-                        string avgangs_land = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_land"));
-                        DateTime avgangs_datum = dr.GetFieldValue<DateTime>(dr.GetOrdinal("avgangs_datum"));
-                        string ankomst_adress = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_adress"));
-                        string ankomst_stad = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_stad"));
-                        string ankomst_land = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_land"));
-                        DateTime ankomst_datum = dr.GetFieldValue<DateTime>(dr.GetOrdinal("ankomst_datum"));
-                        int kostnad = dr.GetFieldValue<int>(dr.GetOrdinal("kostnad"));
-                        int max_platser = dr.GetFieldValue<int>(dr.GetOrdinal("max_platser"));
-                        string chaffor_id = null;
-                        if (!dr.IsDBNull(dr.GetOrdinal("chaffor_id")))
-                        {
-                            chaffor_id = dr.GetFieldValue<string>(dr.GetOrdinal("chaffor_id"));
-                        }
-                        
-                        resor.Add(new BussresaObject(bussresa_id, avgangs_adress, avgangs_stad, avgangs_land, avgangs_datum, 
-                            ankomst_adress, ankomst_stad, ankomst_land, ankomst_datum, kostnad, max_platser, chaffor_id));
-                        boolfound = true;
+                        chaffor_id = dr.GetFieldValue<string>(dr.GetOrdinal("chaffor_id"));
                     }
-                    if (boolfound == false)
-                    {
-                        //No entries
-                        //errorMessage = "Wrong username or password.";
-                    }
+
+                    returnObj.Add(new BussresaObject(bussresa_id, avgangs_adress, avgangs_stad, avgangs_land, avgangs_datum,
+                        ankomst_adress, ankomst_stad, ankomst_land, ankomst_datum, kostnad, max_platser, chaffor_id));
                 }
-            }
-            catch (Exception e)
-            {
-                errorMessage = "Could not connect to database.";
-                Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
+
             }
             finally
             {
                 conn.Close();
             }
-            return resor;
+            return returnObj;
         }
 
-        public static int ConnectCountHallplatser(out bool boolfound, out string errorMessage)
+        public static int CountHallplatser()
         {
-            boolfound = false;
-            errorMessage = "";
-            NpgsqlConnection conn = null;
             int count = 0;
-
-            try
-            {
-                conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
-                conn.Open();
-                NpgsqlCommand cmd = new NpgsqlCommand("SELECT count(*) from hallplats;", conn);
-                NpgsqlDataReader dr = cmd.ExecuteReader();
-
-                Console.WriteLine("Executing command: " + cmd.CommandText);
-                Console.WriteLine("Executing statements: " + dr.Statements[0]);
-
-                using (dr)
-                {
-                    while (dr.Read())
-                    {
-                        count = dr.GetFieldValue<int>(0);
-                        boolfound = true;
-                    }
-                    if (boolfound == false)
-                    {
-                        //No entries
-                        //errorMessage = "Wrong username or password.";
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                errorMessage = "Could not connect to database.";
-                Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
-            }
-            finally
-            {
-                conn.Close();
-            }
+            count = ExecuteAndGetScalar("SELECT count(*) from hallplats;");        
             return count;
         }
 
-        public static List<HallplatsObject> ConnectSelectHallplatser(int limit, int offset, out bool boolfound, out string errorMessage)
+        public static List<HallplatsObject> SelectHallplatser(int limit, int offset)
         {
-            boolfound = false;
-            errorMessage = "";
-            List<HallplatsObject> hallplatser = null;
+            List<HallplatsObject> returnObj = new List<HallplatsObject>();
+
             NpgsqlConnection conn = null;
+            NpgsqlDataReader dr = null;
 
             try
             {
-                conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
-                conn.Open();
-                NpgsqlCommand cmd = new NpgsqlCommand("SELECT * from hallplats order by lower(gatu_adress), lower(stad), lower(land) limit :limit offset :offset;", conn);
-                cmd.Parameters.Add(new NpgsqlParameter(":limit", limit));
-                cmd.Parameters.Add(new NpgsqlParameter(":offset", offset));
-                NpgsqlDataReader dr = cmd.ExecuteReader();
-
-                Console.WriteLine("Executing command: " + cmd.CommandText);
-                Console.WriteLine("Executing statements: " + dr.Statements[0]);
-                hallplatser = new List<HallplatsObject>();
-
-                using (dr)
+                conn = OpenConnectionAndGetReader("SELECT * from hallplats order by lower(gatu_adress), lower(stad), lower(land) limit :p0 offset :p1;", out dr, limit, offset);
+                while (dr.Read())
                 {
-                    while (dr.Read())
-                    {
-                        string gatu_adress = dr.GetFieldValue<string>(dr.GetOrdinal("gatu_adress"));
-                        string stad = dr.GetFieldValue<string>(dr.GetOrdinal("stad"));
-                        string land = dr.GetFieldValue<string>(dr.GetOrdinal("land"));
-                        
-                        hallplatser.Add(new HallplatsObject(gatu_adress, stad, land));
-                        boolfound = true;
-                    }
-                    if (boolfound == false)
-                    {
-                        //No entries
-                        //errorMessage = "Wrong username or password.";
-                    }
+                    string gatu_adress = dr.GetFieldValue<string>(dr.GetOrdinal("gatu_adress"));
+                    string stad = dr.GetFieldValue<string>(dr.GetOrdinal("stad"));
+                    string land = dr.GetFieldValue<string>(dr.GetOrdinal("land"));
+
+                    returnObj.Add(new HallplatsObject(gatu_adress, stad, land));
                 }
-            }
-            catch (Exception e)
-            {
-                errorMessage = "Could not connect to database.";
-                Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
+
             }
             finally
             {
                 conn.Close();
             }
-            return hallplatser;
+            return returnObj;
         }
 
-        public static void ConnectInsertHallplats(HallplatsObject newObject, out bool boolfound, out string errorMessage)
+        public static int InsertHallplats(HallplatsObject newObject)
         {
-            boolfound = false;
-            errorMessage = "";
-            NpgsqlConnection conn = null;
+            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO hallplats (gatu_adress, stad, land) values (:p0, :p1, :p2);", newObject.gatu_adress, newObject.stad, newObject.land);
+            return affectedRows;
 
-            try
-            {
-                conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
-                conn.Open();
-                NpgsqlCommand cmd = new NpgsqlCommand("INSERT INTO hallplats (gatu_adress, stad, land) values (:gatu_adress, :stad, :land);", conn);
-                cmd.Parameters.Add(new NpgsqlParameter(":gatu_adress", newObject.gatu_adress));
-                cmd.Parameters.Add(new NpgsqlParameter(":stad", newObject.stad));
-                cmd.Parameters.Add(new NpgsqlParameter(":land", newObject.land));
-                NpgsqlDataReader dr = cmd.ExecuteReader();
 
-                Console.WriteLine("Executing command: " + cmd.CommandText);
-                Console.WriteLine("Executing statements: " + dr.Statements[0]);
+        }
 
-                using (dr)
-                {
-                    while (dr.Read())
-                    {
-                        boolfound = true;
-                    }
-                    if (boolfound == false)
-                    {
-                        //No entries
-                        //errorMessage = "Wrong username or password.";
-                    }
-                }
-            }
-            catch (Exception e)
+        public static int UpdateHallplats(HallplatsObject newObject, HallplatsObject oldObject)
+        {
+            int affectedRows = ExecuteAndGetNonQuery("UPDATE hallplats SET gatu_adress = :p0, stad = :p1, land = :p2 WHERE gatu_adress = :p3 AND stad = :p4 AND land = :p5;", newObject.gatu_adress, newObject.stad, newObject.land, oldObject.gatu_adress, oldObject.stad, oldObject.land);
+            return affectedRows;
+        }
+
+        public static int DeleteHallplats(HallplatsObject oldObject)
+        {
+            int bokningarCount = 0;
+            bokningarCount = ExecuteAndGetScalar("SELECT count(*) FROM bokning WHERE bokning.bussresa_id IN (SELECT bussresa.bussresa_id FROM bussresa WHERE (bussresa.avgangs_adress = :p0 AND bussresa.avgangs_stad = :p1 AND bussresa.avgangs_land = :p2) OR (bussresa.ankomst_adress = :p0 AND bussresa.ankomst_stad = :p1 AND bussresa.ankomst_land = :p2));", oldObject.gatu_adress, oldObject.stad, oldObject.land);
+
+            int bussresorCount = 0;
+            bussresorCount = ExecuteAndGetScalar("SELECT count(*) FROM bussresa WHERE (bussresa.avgangs_adress = :p0 AND bussresa.avgangs_stad = :p1 AND bussresa.avgangs_land = :p2) OR (bussresa.ankomst_adress = :p0 AND bussresa.ankomst_stad = :p1 AND bussresa.ankomst_land = :p2);", oldObject.gatu_adress, oldObject.stad, oldObject.land);
+
+            int affectedRows = -1;
+
+            MessageBoxResult result = MessageBox.Show("Om du tar bort den här hållplatsen försvinner totalt "+ bussresorCount+ " bussresor och "+bokningarCount+" bokningar! Vill du fortfarande ta bort hållplatsen?", "Varning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
             {
-                errorMessage = "Could not connect to database.";
-                Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
+                ExecuteAndGetNonQuery("DELETE FROM bokning WHERE bokning.bussresa_id IN (SELECT bussresa.bussresa_id FROM bussresa WHERE (bussresa.avgangs_adress = :p0 AND bussresa.avgangs_stad = :p1 AND bussresa.avgangs_land = :p2) OR (bussresa.ankomst_adress = :p0 AND bussresa.ankomst_stad = :p1 AND bussresa.ankomst_land = :p2));", oldObject.gatu_adress, oldObject.stad, oldObject.land);
+                ExecuteAndGetNonQuery("DELETE FROM bussresa WHERE (bussresa.avgangs_adress = :p0 AND bussresa.avgangs_stad = :p1 AND bussresa.avgangs_land = :p2) OR (bussresa.ankomst_adress = :p0 AND bussresa.ankomst_stad = :p1 AND bussresa.ankomst_land = :p2);", oldObject.gatu_adress, oldObject.stad, oldObject.land);
+                affectedRows = ExecuteAndGetNonQuery("DELETE from hallplats WHERE gatu_adress = :p0 AND stad = :p1 AND land = :p2;", oldObject.gatu_adress, oldObject.stad, oldObject.land);
             }
-            finally
-            {
-                conn.Close();
-            }
+            return affectedRows;
         }
 
     }

@@ -30,9 +30,9 @@ namespace Mortfors.Login
             if (IsValidEmail(username))
             {
                 //resenar login
-                bool boolFound = false;
-                currentUser = DBConnection.ConnectVerifyResenar(username, hashedPassword, out boolFound, out errorMessage);
-                if (currentUser != null && boolFound)
+                currentUser = null;
+                currentUser = DBConnection.VerifyResenar(username, hashedPassword);
+                if (currentUser != null)
                 {
                     authenticated = true;
                     Console.WriteLine("Resenar " + username + " is now authenticated!");
@@ -43,9 +43,9 @@ namespace Mortfors.Login
             else
             {
                 //anstalld login
-                bool boolFound = false;
-                currentUser = DBConnection.ConnectVerifyAnstalld(username, hashedPassword, out boolFound, out errorMessage);
-                if(currentUser != null && boolFound)
+                currentUser = null;
+                currentUser = DBConnection.VerifyAnstalld(username, hashedPassword);
+                if(currentUser != null)
                 {
                     authenticated = true;
                     Console.WriteLine("Anstalld " + username + " is now authenticated!");

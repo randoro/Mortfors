@@ -14,7 +14,7 @@
             <Button x:Name="b_nasta" Content="Nästa 50 -&gt;" HorizontalAlignment="Left" Margin="391,1,0,0" VerticalAlignment="Top" Width="85" Click="b_nasta_Click"/>
             <Button x:Name="b_forra" Content="&lt;- Förra 50" HorizontalAlignment="Left" Margin="302,0,0,0" VerticalAlignment="Top" Width="84" Click="b_forra_Click"/>
             <Button x:Name="b_uppdatera" Content="Uppdatera" HorizontalAlignment="Left" Margin="481,0,0,0" VerticalAlignment="Top" Width="83" Click="b_uppdatera_Click"/>
-            <ListView x:Name="lv_hallplatser" HorizontalAlignment="Left" Height="267" VerticalAlignment="Top" Width="564" Margin="0,26,0,0">
+            <ListView x:Name="lv_hallplatser" SelectionMode="Single" HorizontalAlignment="Left" Height="267" VerticalAlignment="Top" Width="564" Margin="0,26,0,0">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Gatuadress" Width="280" DisplayMemberBinding="{Binding gatu_adress}" />
