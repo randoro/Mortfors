@@ -19,7 +19,7 @@
                     <GridView>
                         <GridViewColumn Header="Gatuadress" Width="280" DisplayMemberBinding="{Binding gatu_adress}" />
                         <GridViewColumn Header="Stad" Width="140" DisplayMemberBinding="{Binding stad}" />
-                        <GridViewColumn Header="Land" Width="140" DisplayMemberBinding="{Binding land}" />
+                        <GridViewColumn Header="Land" Width="130" DisplayMemberBinding="{Binding land}" />
                         <!--<GridViewColumn Header="Mail" Width="150">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
