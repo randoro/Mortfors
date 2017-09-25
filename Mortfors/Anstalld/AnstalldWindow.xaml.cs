@@ -1,3 +1,5 @@
+using Mortfors.Anstalld.Hallplatser;
+using Mortfors.Anstalld.Resenarer;
 using Mortfors.Login;
 using Mortfors.SQLObject;
 using System;
@@ -23,8 +25,9 @@ namespace Mortfors
     {
 
 
-        HallplatsWindow hallplatsWindow;
-        
+        HanteraHallplatsWindow hallplatsWindow;
+        HanteraResenarWindow resenarWindow;
+
         const int limit = 2;
         public int offset = 0;
         public int count = 0;
@@ -78,6 +81,10 @@ namespace Mortfors
             {
                 hallplatsWindow.UpdateHallplatser();
             }
+            if (resenarWindow != null && resenarWindow.Visibility == Visibility.Visible)
+            {
+                resenarWindow.UpdateResenarer();
+            }
         }
 
         public void DisableButtons()
@@ -128,9 +135,26 @@ namespace Mortfors
 
         private void b_hanterahallplatser_Click(object sender, RoutedEventArgs e)
         {
-            hallplatsWindow = new HallplatsWindow(this);
+            hallplatsWindow = new HanteraHallplatsWindow(this);
             hallplatsWindow.Show();
             b_hanterahallplatser.IsEnabled = false;
+        }
+
+        private void b_hanteraresenarer_Click(object sender, RoutedEventArgs e)
+        {
+            resenarWindow = new HanteraResenarWindow(this);
+            resenarWindow.Show();
+            b_hanteraresenarer.IsEnabled = false;
+        }
+
+        private void b_hanterabokningar_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void b_hanteraanstallda_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

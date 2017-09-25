@@ -8,8 +8,8 @@ namespace Mortfors.SQLObject
 {
     public class AnstalldObject : UserObject
     {
-        public readonly string personNummer;
-        public readonly bool isAdmin;
+        public string personNummer { get; set; }
+        public bool isAdmin { get; set; }
 
 
         public AnstalldObject(string _personNummer, string _hashedPassword, bool _isAdmin, string _namn, string _adress, string _telefon)

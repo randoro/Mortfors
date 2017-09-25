@@ -8,11 +8,11 @@ namespace Mortfors.SQLObject
 {
     public abstract class UserObject
     {
-        public readonly string hashedPassword;
-        public readonly string namn;
-        public readonly string adress;
-        public readonly string telefon;
-        
+        public string hashedPassword { get; set; }
+        public string namn { get; set; }
+        public string adress { get; set; }
+        public string telefon { get; set; }
+
         public UserObject(string _hashedPassword, string _namn, string _adress, string _telefon)
         {
             hashedPassword = _hashedPassword;

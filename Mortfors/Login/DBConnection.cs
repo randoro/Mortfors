@@ -11,13 +11,18 @@ namespace Mortfors.Login
 {
     static class DBConnection
     {
+        #region DBCredentials
         const string host = "pgserver.mah.se";
         const string port = "5432";
         const string userID = "ae7076";
         const string password = "xvkkumqd";
         const string database = "ae7076";
 
+        #endregion DBCredentials
+
         public static string ErrorMessage = "";
+
+        #region rawConnections
 
         /// <summary>
         /// For getting rows, SELECT
@@ -141,6 +146,8 @@ namespace Mortfors.Login
             }
             return number;
         }
+
+        #endregion rawConnections
 
         public static bool ConnectAndGetVersion()
         {
@@ -345,6 +352,75 @@ namespace Mortfors.Login
                 ExecuteAndGetNonQuery("DELETE FROM bokning WHERE bokning.bussresa_id IN (SELECT bussresa.bussresa_id FROM bussresa WHERE (bussresa.avgangs_adress = :p0 AND bussresa.avgangs_stad = :p1 AND bussresa.avgangs_land = :p2) OR (bussresa.ankomst_adress = :p0 AND bussresa.ankomst_stad = :p1 AND bussresa.ankomst_land = :p2));", oldObject.gatu_adress, oldObject.stad, oldObject.land);
                 ExecuteAndGetNonQuery("DELETE FROM bussresa WHERE (bussresa.avgangs_adress = :p0 AND bussresa.avgangs_stad = :p1 AND bussresa.avgangs_land = :p2) OR (bussresa.ankomst_adress = :p0 AND bussresa.ankomst_stad = :p1 AND bussresa.ankomst_land = :p2);", oldObject.gatu_adress, oldObject.stad, oldObject.land);
                 affectedRows = ExecuteAndGetNonQuery("DELETE from hallplats WHERE gatu_adress = :p0 AND stad = :p1 AND land = :p2;", oldObject.gatu_adress, oldObject.stad, oldObject.land);
+            }
+            return affectedRows;
+        }
+        
+        public static int CountResenarer()
+        {
+            int count = 0;
+            count = ExecuteAndGetScalar("SELECT count(*) from resenar;");
+            return count;
+        }
+
+        public static List<ResenarObject> SelectResenarer(int limit, int offset)
+        {
+            List<ResenarObject> returnObj = new List<ResenarObject>();
+
+            NpgsqlConnection conn = null;
+            NpgsqlDataReader dr = null;
+
+            try
+            {
+                conn = OpenConnectionAndGetReader("SELECT * from resenar order by lower(email) limit :p0 offset :p1;", out dr, limit, offset);
+                while (dr.Read())
+                {
+                    string email = dr.GetFieldValue<string>(dr.GetOrdinal("email"));
+                    string hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("losenord"));
+                    string namn = dr.GetFieldValue<string>(dr.GetOrdinal("namn"));
+                    string adress = dr.GetFieldValue<string>(dr.GetOrdinal("adress"));
+                    string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("telefon"));
+
+                    returnObj.Add(new ResenarObject(email, hashedPassword, namn, adress, telefon));
+                }
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return returnObj;
+        }
+
+        public static int InsertResenar(ResenarObject newObject)
+        {
+            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO resenar (email, losenord, namn, adress, telefon) values (:p0, :p1, :p2, :p3, :p4);", newObject.email, newObject.hashedPassword, newObject.namn, newObject.adress, newObject.telefon);
+            return affectedRows;
+
+
+        }
+
+        public static int UpdateResenar(ResenarObject newObject, ResenarObject oldObject)
+        {
+            int affectedRows = ExecuteAndGetNonQuery("UPDATE resenar SET email = :p0, losenord = :p1, namn = :p2, adress = :p3, telefon = :p4 WHERE email = :p5;", newObject.email, newObject.hashedPassword, newObject.namn, newObject.adress, newObject.telefon, oldObject.email);
+            return affectedRows;
+        }
+
+        public static int DeleteResenar(ResenarObject oldObject)
+        {
+            int bokningarCount = 0;
+            bokningarCount = ExecuteAndGetScalar("SELECT count(*) FROM bokning WHERE bokning.resenar = :p0;", oldObject.email);
+
+            //int bussresorCount = 0;
+            //bussresorCount = ExecuteAndGetScalar("SELECT count(*) FROM bussresa WHERE (bussresa.avgangs_adress = :p0 AND bussresa.avgangs_stad = :p1 AND bussresa.avgangs_land = :p2) OR (bussresa.ankomst_adress = :p0 AND bussresa.ankomst_stad = :p1 AND bussresa.ankomst_land = :p2);", oldObject.gatu_adress, oldObject.stad, oldObject.land);
+
+            int affectedRows = -1;
+
+            MessageBoxResult result = MessageBox.Show("Om du tar bort den här resenären försvinner totalt " + bokningarCount + " bokningar! Vill du fortfarande ta bort resenären?", "Varning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                ExecuteAndGetNonQuery("DELETE FROM bokning WHERE bokning.resenar = :p0;", oldObject.email);
+                affectedRows = ExecuteAndGetNonQuery("DELETE from resenar WHERE email = :p0;", oldObject.email);
             }
             return affectedRows;
         }

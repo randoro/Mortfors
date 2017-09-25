@@ -15,19 +15,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Mortfors
+namespace Mortfors.Anstalld.Hallplatser
 {
     /// <summary>
     /// Interaction logic for AndraHallplats.xaml
     /// </summary>
-    public partial class AndraHallplats : Window
+    public partial class AndraHallplatsWindow : Window
     {
-        public HallplatsWindow parentWindow;
+        public HanteraHallplatsWindow parentWindow;
         readonly HallplatsObject oldObject;
         bool newhallplats;
-        string errorMessage = "";
 
-        public AndraHallplats(HallplatsWindow _parent)
+        public AndraHallplatsWindow(HanteraHallplatsWindow _parent)
         {
             InitializeComponent();
             Title = "Ny Hållplats - " + Authenticator.GetUserInfo();
@@ -35,7 +34,7 @@ namespace Mortfors
             newhallplats = true;
         }
 
-        public AndraHallplats(HallplatsWindow _parent, HallplatsObject _oldObject)
+        public AndraHallplatsWindow(HanteraHallplatsWindow _parent, HallplatsObject _oldObject)
         {
             InitializeComponent();
             Title = "Redigera Hållplats - " + Authenticator.GetUserInfo();
@@ -56,10 +55,9 @@ namespace Mortfors
 
         private void b_spara_Click(object sender, RoutedEventArgs e)
         {
-            //Fix Check if empty!
             if(tb_gatuadress.Text == "" || tb_stad.Text == "" || tb_land.Text == "")
             {
-                errorMessage = "One or more fields are empty.";
+                MessageBox.Show("Tomma fält är inte tillåtna.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             HallplatsObject newObject = new HallplatsObject(tb_gatuadress.Text, tb_stad.Text, tb_land.Text);
@@ -75,7 +73,8 @@ namespace Mortfors
 
             parentWindow.parentWindow.UpdateAllChain();
 
-            Close(); //Check if ok?
+            Close();
+            //TODO: check if ok
         }
 
         private void b_avbryt_Click(object sender, RoutedEventArgs e)

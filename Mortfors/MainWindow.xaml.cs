@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Mortfors.SQLObject;
 using Mortfors.Login;
+using Mortfors.Resenar;
 
 namespace Mortfors
 {
@@ -37,7 +38,7 @@ namespace Mortfors
 
         private void b_login_Click(object sender, RoutedEventArgs e)
         {
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 5); ; // here time in milliseconds
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 5);
             dispatcherTimer.Tick += timer_Tick;
             dispatcherTimer.Start();
             b_login.IsEnabled = false;

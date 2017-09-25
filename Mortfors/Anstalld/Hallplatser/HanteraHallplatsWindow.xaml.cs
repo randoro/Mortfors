@@ -15,15 +15,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Mortfors
+namespace Mortfors.Anstalld.Hallplatser
 {
     /// <summary>
     /// Interaction logic for HallplatsWindow.xaml
     /// </summary>
-    public partial class HallplatsWindow : Window
+    public partial class HanteraHallplatsWindow : Window
     {
         public AnstalldWindow parentWindow;
-        AndraHallplats andraHallplats;
+        AndraHallplatsWindow andraHallplats;
         List<HallplatsObject> hallplatsObject;
 
         
@@ -31,7 +31,7 @@ namespace Mortfors
         public int offset = 0;
         public int count = 0;
 
-        public HallplatsWindow(AnstalldWindow _parent)
+        public HanteraHallplatsWindow(AnstalldWindow _parent)
         {
             InitializeComponent();
             parentWindow = _parent;
@@ -41,7 +41,7 @@ namespace Mortfors
 
         }
 
-        void HallplatsWindow_Closing(object sender, CancelEventArgs e)
+        void HanteraHallplatsWindow_Closing(object sender, CancelEventArgs e)
         {
             parentWindow.b_hanterahallplatser.IsEnabled = true;
         }
@@ -104,7 +104,7 @@ namespace Mortfors
 
         private void b_nyhallplats_Click(object sender, RoutedEventArgs e)
         {
-            andraHallplats = new AndraHallplats(this);
+            andraHallplats = new AndraHallplatsWindow(this);
             andraHallplats.Show();
             b_nyhallplats.IsEnabled = false;
             b_redigeramarkerad.IsEnabled = false;
@@ -116,11 +116,15 @@ namespace Mortfors
         {
             if (lv_hallplatser.SelectedItem != null)
             {
-                andraHallplats = new AndraHallplats(this, (HallplatsObject)lv_hallplatser.SelectedItem);
+                andraHallplats = new AndraHallplatsWindow(this, (HallplatsObject)lv_hallplatser.SelectedItem);
                 andraHallplats.Show();
                 b_nyhallplats.IsEnabled = false;
                 b_redigeramarkerad.IsEnabled = false;
                 b_tabortmarkerad.IsEnabled = false;
+            }
+            else
+            {
+                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -128,9 +132,15 @@ namespace Mortfors
         {
             if (lv_hallplatser.SelectedItem != null)
             {
-                DBConnection.DeleteHallplats((HallplatsObject)lv_hallplatser.SelectedItem);
-                
-                
+                if (DBConnection.DeleteHallplats((HallplatsObject)lv_hallplatser.SelectedItem) > 0)
+                {
+                    parentWindow.UpdateAllChain();
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }

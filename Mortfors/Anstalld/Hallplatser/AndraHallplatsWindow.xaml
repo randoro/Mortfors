@@ -1,9 +1,9 @@
-<Window x:Class="Mortfors.AndraHallplats"
+<Window x:Class="Mortfors.Anstalld.Hallplatser.AndraHallplatsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Mortfors"
+        xmlns:local="clr-namespace:Mortfors.Anstalld.Hallplatser"
         mc:Ignorable="d"
         Closing="AndraHallplatsWindow_Closing"
         Title="AndraHallplats" Height="187.025" Width="334.178">

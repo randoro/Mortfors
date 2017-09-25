@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Mortfors
+namespace Mortfors.Resenar
 {
     /// <summary>
     /// Interaction logic for ResenarWindow.xaml

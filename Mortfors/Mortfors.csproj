@@ -63,16 +63,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Anstalld\Hallplats\AndraHallplats.xaml.cs">
-      <DependentUpon>AndraHallplats.xaml</DependentUpon>
+    <Compile Include="Anstalld\Hallplatser\AndraHallplatsWindow.xaml.cs">
+      <DependentUpon>AndraHallplatsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Anstalld\Resenarer\AndraResenarWindow.xaml.cs">
+      <DependentUpon>AndraResenarWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Anstalld\Resenarer\HanteraResenarWindow.xaml.cs">
+      <DependentUpon>HanteraResenarWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SQLObject\AnstalldObject.cs" />
     <Compile Include="Anstalld\AnstalldWindow.xaml.cs">
       <DependentUpon>AnstalldWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SQLObject\BussresaObject.cs" />
-    <Compile Include="Anstalld\Hallplats\HallplatsWindow.xaml.cs">
-      <DependentUpon>HallplatsWindow.xaml</DependentUpon>
+    <Compile Include="Anstalld\Hallplatser\HanteraHallplatsWindow.xaml.cs">
+      <DependentUpon>HanteraHallplatsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SQLObject\HallplatsObject.cs" />
     <Compile Include="SQLObject\ResenarObject.cs" />
@@ -81,7 +87,7 @@
     </Compile>
     <Compile Include="Login\SimpleHash.cs" />
     <Compile Include="SQLObject\UserObject.cs" />
-    <Page Include="Anstalld\Hallplats\AndraHallplats.xaml">
+    <Page Include="Anstalld\Hallplatser\AndraHallplatsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -89,7 +95,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Anstalld\Hallplats\HallplatsWindow.xaml">
+    <Page Include="Anstalld\Hallplatser\HanteraHallplatsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Anstalld\Resenarer\AndraResenarWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Anstalld\Resenarer\HanteraResenarWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -139,6 +153,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Anstalld\Anstallda\" />
+    <Folder Include="Anstalld\Bokningar\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

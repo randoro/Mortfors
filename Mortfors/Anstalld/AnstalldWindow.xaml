@@ -49,9 +49,9 @@
         <Grid HorizontalAlignment="Left" Margin="0,343,0,0" Width="1131" Height="132" VerticalAlignment="Top">
             <Label x:Name="l_verktyg" Content="Admin Verktyg" HorizontalAlignment="Left" VerticalAlignment="Top" Width="206" Margin="10,0,0,0"/>
             <Button x:Name="b_hanterahallplatser" Content="Hantera Hållplatser" HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top" Width="206" Click="b_hanterahallplatser_Click"/>
-            <Button x:Name="b_hanteraresenarer" Content="Hantera Resenärer" HorizontalAlignment="Left" Margin="10,51,0,0" VerticalAlignment="Top" Width="206"/>
-            <Button x:Name="b_hanterabokningar" Content="Hantera Bokningar" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" Width="206"/>
-            <Button x:Name="b_hanteraanstallda" Content="Hantera Anställda" HorizontalAlignment="Left" Margin="10,101,0,0" VerticalAlignment="Top" Width="206"/>
+            <Button x:Name="b_hanteraresenarer" Content="Hantera Resenärer" HorizontalAlignment="Left" Margin="10,51,0,0" VerticalAlignment="Top" Width="206" Click="b_hanteraresenarer_Click"/>
+            <Button x:Name="b_hanterabokningar" Content="Hantera Bokningar" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" Width="206" Click="b_hanterabokningar_Click"/>
+            <Button x:Name="b_hanteraanstallda" Content="Hantera Anställda" HorizontalAlignment="Left" Margin="10,101,0,0" VerticalAlignment="Top" Width="206" Click="b_hanteraanstallda_Click"/>
         </Grid>
 
     </Grid>
