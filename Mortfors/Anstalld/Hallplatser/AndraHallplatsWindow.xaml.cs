@@ -48,7 +48,7 @@ namespace Mortfors.Anstalld.Hallplatser
 
         void AndraHallplatsWindow_Closing(object sender, CancelEventArgs e)
         {
-            parentWindow.b_nyhallplats.IsEnabled = true;
+            parentWindow.b_ny.IsEnabled = true;
             parentWindow.b_redigeramarkerad.IsEnabled = true;
             parentWindow.b_tabortmarkerad.IsEnabled = true;
         }

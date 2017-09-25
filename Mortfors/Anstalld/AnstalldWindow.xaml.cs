@@ -1,3 +1,4 @@
+using Mortfors.Anstalld.Anstallda;
 using Mortfors.Anstalld.Hallplatser;
 using Mortfors.Anstalld.Resenarer;
 using Mortfors.Login;
@@ -27,6 +28,7 @@ namespace Mortfors
 
         HanteraHallplatsWindow hallplatsWindow;
         HanteraResenarWindow resenarWindow;
+        HanteraAnstalldWindow anstalldWindow;
 
         const int limit = 2;
         public int offset = 0;
@@ -49,6 +51,10 @@ namespace Mortfors
                 {
                     b_kormarkerad.IsEnabled = false;
                     b_avanmalkorningavmarkerad.IsEnabled = false;
+
+                    b_nyresa.IsEnabled = true;
+                    b_redigeramarkerad.IsEnabled = true;
+                    b_tabortmarkerad.IsEnabled = true;
                     b_hanterahallplatser.IsEnabled = true;
                     b_hanteraresenarer.IsEnabled = true;
                     b_hanterabokningar.IsEnabled = true;
@@ -58,6 +64,10 @@ namespace Mortfors
                 {
                     b_kormarkerad.IsEnabled = true;
                     b_avanmalkorningavmarkerad.IsEnabled = true;
+
+                    b_nyresa.IsEnabled = false;
+                    b_redigeramarkerad.IsEnabled = false;
+                    b_tabortmarkerad.IsEnabled = false;
                     b_hanterahallplatser.IsEnabled = false;
                     b_hanteraresenarer.IsEnabled = false;
                     b_hanterabokningar.IsEnabled = false;
@@ -84,6 +94,10 @@ namespace Mortfors
             if (resenarWindow != null && resenarWindow.Visibility == Visibility.Visible)
             {
                 resenarWindow.UpdateResenarer();
+            }
+            if (anstalldWindow != null && anstalldWindow.Visibility == Visibility.Visible)
+            {
+                anstalldWindow.UpdateAnstallda();
             }
         }
 
@@ -154,7 +168,9 @@ namespace Mortfors
 
         private void b_hanteraanstallda_Click(object sender, RoutedEventArgs e)
         {
-
+            anstalldWindow = new HanteraAnstalldWindow(this);
+            anstalldWindow.Show();
+            b_hanteraanstallda.IsEnabled = false;
         }
     }
 }

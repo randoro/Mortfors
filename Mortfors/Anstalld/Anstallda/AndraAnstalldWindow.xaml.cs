@@ -15,40 +15,41 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Mortfors.Anstalld.Resenarer
+namespace Mortfors.Anstalld.Anstallda
 {
     /// <summary>
-    /// Interaction logic for AndraResenar.xaml
+    /// Interaction logic for AndraAnstalldWindow.xaml
     /// </summary>
-    public partial class AndraResenarWindow : Window
+    public partial class AndraAnstalldWindow : Window
     {
-        public HanteraResenarWindow parentWindow;
-        readonly ResenarObject oldObject;
-        bool newresenar;
+        public HanteraAnstalldWindow parentWindow;
+        readonly AnstalldObject oldObject;
+        bool newanstalld;
 
-        public AndraResenarWindow(HanteraResenarWindow _parent)
+        public AndraAnstalldWindow(HanteraAnstalldWindow _parent)
         {
             InitializeComponent();
-            Title = "Ny Resenär - " + Authenticator.GetUserInfo();
+            Title = "Ny Anställd - " + Authenticator.GetUserInfo();
             parentWindow = _parent;
-            newresenar = true;
+            newanstalld = true;
         }
 
-        public AndraResenarWindow(HanteraResenarWindow _parent, ResenarObject _oldObject)
+        public AndraAnstalldWindow(HanteraAnstalldWindow _parent, AnstalldObject _oldObject)
         {
             InitializeComponent();
-            Title = "Redigera Resenär - " + Authenticator.GetUserInfo();
+            Title = "Redigera Anställd - " + Authenticator.GetUserInfo();
             oldObject = _oldObject;
-            tb_email.Text = oldObject.email;
+            tb_pers_nr.Text = oldObject.personNummer;
             pb_losenord.Password = "";
+            cb_admin.IsChecked = oldObject.isAdmin;
             tb_namn.Text = oldObject.namn;
             tb_adress.Text = oldObject.adress;
-            tb_telefon.Text = oldObject.telefon;
+            tb_hem_telefon.Text = oldObject.telefon;
             parentWindow = _parent;
-            newresenar = false;
+            newanstalld = false;
         }
 
-        void AndraResenarWindow_Closing(object sender, CancelEventArgs e)
+        void AndraAnstalldWindow_Closing(object sender, CancelEventArgs e)
         {
             parentWindow.b_ny.IsEnabled = true;
             parentWindow.b_redigeramarkerad.IsEnabled = true;
@@ -57,22 +58,21 @@ namespace Mortfors.Anstalld.Resenarer
 
         private void b_spara_Click(object sender, RoutedEventArgs e)
         {
-            if (tb_email.Text == "" || pb_losenord.Password == "" || tb_namn.Text == "" || tb_adress.Text == "" || tb_telefon.Text == "")
+            if (tb_pers_nr.Text == "" || pb_losenord.Password == "" || tb_namn.Text == "" || tb_adress.Text == "" || tb_hem_telefon.Text == "")
             {
                 MessageBox.Show("Tomma fält är inte tillåtna.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
+            
+            AnstalldObject newObject = new AnstalldObject(tb_pers_nr.Text, SimpleHash.GenerateHashedPassword(tb_pers_nr.Text, pb_losenord.Password), (bool)cb_admin.IsChecked, tb_namn.Text, tb_adress.Text, tb_hem_telefon.Text);
 
-
-            ResenarObject newObject = new ResenarObject(tb_email.Text, SimpleHash.GenerateHashedPassword(tb_email.Text, pb_losenord.Password), tb_namn.Text, tb_adress.Text, tb_telefon.Text);
-
-            if (newresenar)
+            if (newanstalld)
             {
-                DBConnection.InsertResenar(newObject);
+                DBConnection.InsertAnstalld(newObject);
             }
             else
             {
-                DBConnection.UpdateResenar(newObject, oldObject);
+                DBConnection.UpdateAnstalld(newObject, oldObject);
             }
 
             parentWindow.parentWindow.UpdateAllChain();
@@ -87,3 +87,4 @@ namespace Mortfors.Anstalld.Resenarer
         }
     }
 }
+

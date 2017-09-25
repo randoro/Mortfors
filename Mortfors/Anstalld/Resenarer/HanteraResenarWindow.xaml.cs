@@ -50,7 +50,7 @@ namespace Mortfors.Anstalld.Resenarer
         {
             count = DBConnection.CountResenarer();
             resenarObject = DBConnection.SelectResenarer(limit, offset);
-            lv_resenarer.ItemsSource = resenarObject;
+            lv_lista.ItemsSource = resenarObject;
             l_visar.Content = "Visar " + offset + " - " + (offset + limit) + " av " + count + ".";
             DisableButtons();
         }
@@ -101,11 +101,11 @@ namespace Mortfors.Anstalld.Resenarer
             UpdateResenarer();
         }
 
-        private void b_nyhallplats_Click(object sender, RoutedEventArgs e)
+        private void b_ny_Click(object sender, RoutedEventArgs e)
         {
             andraResenar = new AndraResenarWindow(this);
             andraResenar.Show();
-            b_nyresenar.IsEnabled = false;
+            b_ny.IsEnabled = false;
             b_redigeramarkerad.IsEnabled = false;
             b_tabortmarkerad.IsEnabled = false;
 
@@ -113,11 +113,11 @@ namespace Mortfors.Anstalld.Resenarer
 
         private void b_redigeramarkerad_Click(object sender, RoutedEventArgs e)
         {
-            if (lv_resenarer.SelectedItem != null)
+            if (lv_lista.SelectedItem != null)
             {
-                andraResenar = new AndraResenarWindow(this, (ResenarObject)lv_resenarer.SelectedItem);
+                andraResenar = new AndraResenarWindow(this, (ResenarObject)lv_lista.SelectedItem);
                 andraResenar.Show();
-                b_nyresenar.IsEnabled = false;
+                b_ny.IsEnabled = false;
                 b_redigeramarkerad.IsEnabled = false;
                 b_tabortmarkerad.IsEnabled = false;
             }
@@ -129,9 +129,9 @@ namespace Mortfors.Anstalld.Resenarer
 
         private void b_tabortmarkerad_Click(object sender, RoutedEventArgs e)
         {
-            if (lv_resenarer.SelectedItem != null)
+            if (lv_lista.SelectedItem != null)
             {
-                if(DBConnection.DeleteResenar((ResenarObject)lv_resenarer.SelectedItem) > 0)
+                if(DBConnection.DeleteResenar((ResenarObject)lv_lista.SelectedItem) > 0)
                 {
                     parentWindow.UpdateAllChain();
                 }

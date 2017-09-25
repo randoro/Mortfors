@@ -63,6 +63,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Anstalld\Anstallda\AndraAnstalldWindow.xaml.cs">
+      <DependentUpon>AndraAnstalldWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Anstalld\Anstallda\HanteraAnstalldWindow.xaml.cs">
+      <DependentUpon>HanteraAnstalldWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Anstalld\Hallplatser\AndraHallplatsWindow.xaml.cs">
       <DependentUpon>AndraHallplatsWindow.xaml</DependentUpon>
     </Compile>
@@ -87,6 +93,14 @@
     </Compile>
     <Compile Include="Login\SimpleHash.cs" />
     <Compile Include="SQLObject\UserObject.cs" />
+    <Page Include="Anstalld\Anstallda\AndraAnstalldWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Anstalld\Anstallda\HanteraAnstalldWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Anstalld\Hallplatser\AndraHallplatsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -155,7 +169,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Anstalld\Anstallda\" />
     <Folder Include="Anstalld\Bokningar\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

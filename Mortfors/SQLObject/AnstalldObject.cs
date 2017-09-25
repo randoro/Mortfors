@@ -11,6 +11,16 @@ namespace Mortfors.SQLObject
         public string personNummer { get; set; }
         public bool isAdmin { get; set; }
 
+        public string adminString { get
+            {
+                return isAdmin ? "Ja" : "Nej";
+            }
+            private set
+            {
+                
+            }
+        }
+
 
         public AnstalldObject(string _personNummer, string _hashedPassword, bool _isAdmin, string _namn, string _adress, string _telefon)
             : base(_hashedPassword, _namn, _adress, _telefon)

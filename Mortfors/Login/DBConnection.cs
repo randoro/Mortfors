@@ -176,6 +176,8 @@ namespace Mortfors.Login
             return boolfound;
         }
 
+        #region login
+
         public static AnstalldObject VerifyAnstalld(string username, string hashedPassword)
         {
             ErrorMessage = "Wrong username or password.";
@@ -240,6 +242,10 @@ namespace Mortfors.Login
             
         }
 
+        #endregion login
+
+        #region bussresa
+
         public static int CountBussResor()
         {
             int count = 0;
@@ -287,6 +293,10 @@ namespace Mortfors.Login
             }
             return returnObj;
         }
+
+        #endregion bussresa;
+
+        #region hallplats
 
         public static int CountHallplatser()
         {
@@ -351,11 +361,15 @@ namespace Mortfors.Login
             {
                 ExecuteAndGetNonQuery("DELETE FROM bokning WHERE bokning.bussresa_id IN (SELECT bussresa.bussresa_id FROM bussresa WHERE (bussresa.avgangs_adress = :p0 AND bussresa.avgangs_stad = :p1 AND bussresa.avgangs_land = :p2) OR (bussresa.ankomst_adress = :p0 AND bussresa.ankomst_stad = :p1 AND bussresa.ankomst_land = :p2));", oldObject.gatu_adress, oldObject.stad, oldObject.land);
                 ExecuteAndGetNonQuery("DELETE FROM bussresa WHERE (bussresa.avgangs_adress = :p0 AND bussresa.avgangs_stad = :p1 AND bussresa.avgangs_land = :p2) OR (bussresa.ankomst_adress = :p0 AND bussresa.ankomst_stad = :p1 AND bussresa.ankomst_land = :p2);", oldObject.gatu_adress, oldObject.stad, oldObject.land);
-                affectedRows = ExecuteAndGetNonQuery("DELETE from hallplats WHERE gatu_adress = :p0 AND stad = :p1 AND land = :p2;", oldObject.gatu_adress, oldObject.stad, oldObject.land);
+                affectedRows = ExecuteAndGetNonQuery("DELETE FROM hallplats WHERE gatu_adress = :p0 AND stad = :p1 AND land = :p2;", oldObject.gatu_adress, oldObject.stad, oldObject.land);
             }
             return affectedRows;
         }
-        
+
+        #endregion hallplats
+
+        #region resenar
+
         public static int CountResenarer()
         {
             int count = 0;
@@ -410,20 +424,90 @@ namespace Mortfors.Login
         {
             int bokningarCount = 0;
             bokningarCount = ExecuteAndGetScalar("SELECT count(*) FROM bokning WHERE bokning.resenar = :p0;", oldObject.email);
-
-            //int bussresorCount = 0;
-            //bussresorCount = ExecuteAndGetScalar("SELECT count(*) FROM bussresa WHERE (bussresa.avgangs_adress = :p0 AND bussresa.avgangs_stad = :p1 AND bussresa.avgangs_land = :p2) OR (bussresa.ankomst_adress = :p0 AND bussresa.ankomst_stad = :p1 AND bussresa.ankomst_land = :p2);", oldObject.gatu_adress, oldObject.stad, oldObject.land);
-
+            
             int affectedRows = -1;
 
             MessageBoxResult result = MessageBox.Show("Om du tar bort den här resenären försvinner totalt " + bokningarCount + " bokningar! Vill du fortfarande ta bort resenären?", "Varning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Yes)
             {
                 ExecuteAndGetNonQuery("DELETE FROM bokning WHERE bokning.resenar = :p0;", oldObject.email);
-                affectedRows = ExecuteAndGetNonQuery("DELETE from resenar WHERE email = :p0;", oldObject.email);
+                affectedRows = ExecuteAndGetNonQuery("DELETE FROM resenar WHERE email = :p0;", oldObject.email);
             }
             return affectedRows;
         }
+
+        #endregion resenar
+
+        #region anstalld
+
+        public static int CountAnstallda()
+        {
+            int count = 0;
+            count = ExecuteAndGetScalar("SELECT count(*) from anstalld;");
+            return count;
+        }
+
+        public static List<AnstalldObject> SelectAnstallda(int limit, int offset)
+        {
+            List<AnstalldObject> returnObj = new List<AnstalldObject>();
+
+            NpgsqlConnection conn = null;
+            NpgsqlDataReader dr = null;
+
+            try
+            {
+                conn = OpenConnectionAndGetReader("SELECT * from anstalld order by lower(pers_nr) limit :p0 offset :p1;", out dr, limit, offset);
+                while (dr.Read())
+                {
+                    string pers_nr = dr.GetFieldValue<string>(dr.GetOrdinal("pers_nr"));
+                    string hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("losenord"));
+                    bool isAdmin = ((dr.GetFieldValue<Int32>(dr.GetOrdinal("admin")) == 0) ? false : true);
+                    string namn = dr.GetFieldValue<string>(dr.GetOrdinal("namn"));
+                    string adress = dr.GetFieldValue<string>(dr.GetOrdinal("adress"));
+                    string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("hem_telefon"));
+
+                    returnObj.Add(new AnstalldObject(pers_nr, hashedPassword, isAdmin, namn, adress, telefon));
+                }
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return returnObj;
+        }
+
+        public static int InsertAnstalld(AnstalldObject newObject)
+        {
+            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO anstalld (pers_nr, losenord, admin, namn, adress, hem_telefon) values (:p0, :p1, :p2, :p3, :p4, :p5);", newObject.personNummer, newObject.hashedPassword, newObject.isAdmin ? 1 : 0, newObject.namn, newObject.adress, newObject.telefon);
+            return affectedRows;
+
+
+        }
+
+        public static int UpdateAnstalld(AnstalldObject newObject, AnstalldObject oldObject)
+        {
+            int affectedRows = ExecuteAndGetNonQuery("UPDATE anstalld SET pers_nr = :p0, losenord = :p1, admin = :p2, namn = :p3, adress = :p4, hem_telefon = :p5 WHERE pers_nr = :p6;", newObject.personNummer, newObject.hashedPassword, newObject.isAdmin ? 1 : 0, newObject.namn, newObject.adress, newObject.telefon, oldObject.personNummer);
+            return affectedRows;
+        }
+
+        public static int DeleteAnstalld(AnstalldObject oldObject)
+        {
+            int bussresaCount = 0;
+            bussresaCount = ExecuteAndGetScalar("SELECT count(*) FROM bussresa WHERE bussresa.chaffor_id = :p0;", oldObject.personNummer);
+
+            int affectedRows = -1;
+
+            MessageBoxResult result = MessageBox.Show("Om du tar bort den här anställda personen försvinner den anställda som chafför på totalt " + bussresaCount + " bussresor! (Men bussresorna finns fortfarande kvar ändå.) Vill du fortfarande ta bort resenären?", "Varning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                ExecuteAndGetNonQuery("UPDATE bussresa SET chaffor_id = NULL WHERE chaffor_id = :p0;", oldObject.personNummer);
+                affectedRows = ExecuteAndGetNonQuery("DELETE FROM anstalld WHERE pers_nr = :p0;", oldObject.personNummer);
+            }
+            return affectedRows;
+        }
+
+        #endregion anstalld
 
     }
 }

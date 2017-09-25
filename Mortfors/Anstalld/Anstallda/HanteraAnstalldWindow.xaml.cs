@@ -15,43 +15,42 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Mortfors.Anstalld.Hallplatser
+namespace Mortfors.Anstalld.Anstallda
 {
     /// <summary>
-    /// Interaction logic for HallplatsWindow.xaml
+    /// Interaction logic for HanteraAnstalldWindow.xaml
     /// </summary>
-    public partial class HanteraHallplatsWindow : Window
+    public partial class HanteraAnstalldWindow : Window
     {
         public AnstalldWindow parentWindow;
-        AndraHallplatsWindow andraHallplats;
-        List<HallplatsObject> hallplatsObject;
+        AndraAnstalldWindow andraAnstalld;
+        List<AnstalldObject> anstalldObject;
 
-        
+
         const int limit = 2;
         public int offset = 0;
         public int count = 0;
 
-        public HanteraHallplatsWindow(AnstalldWindow _parent)
+        public HanteraAnstalldWindow(AnstalldWindow _parent)
         {
             InitializeComponent();
             parentWindow = _parent;
-            hallplatsObject = new List<HallplatsObject>();
-            this.Title = "Hantera Hållplatser - Välkommen " + Authenticator.GetUserInfo() + ".";
-            UpdateHallplatser();
+            anstalldObject = new List<AnstalldObject>();
+            this.Title = "Hantera Anstallda - Välkommen " + Authenticator.GetUserInfo() + ".";
+            UpdateAnstallda();
 
         }
 
-        void HanteraHallplatsWindow_Closing(object sender, CancelEventArgs e)
+        void HanteraAnstalldWindow_Closing(object sender, CancelEventArgs e)
         {
-            parentWindow.b_hanterahallplatser.IsEnabled = true;
+            parentWindow.b_hanteraanstallda.IsEnabled = true;
         }
 
-        public void UpdateHallplatser()
+        public void UpdateAnstallda()
         {
-            
-            count = DBConnection.CountHallplatser();
-            hallplatsObject = DBConnection.SelectHallplatser(limit, offset);
-            lv_lista.ItemsSource = hallplatsObject;
+            count = DBConnection.CountAnstallda();
+            anstalldObject = DBConnection.SelectAnstallda(limit, offset);
+            lv_lista.ItemsSource = anstalldObject;
             l_visar.Content = "Visar " + offset + " - " + (offset + limit) + " av " + count + ".";
             DisableButtons();
         }
@@ -88,24 +87,24 @@ namespace Mortfors.Anstalld.Hallplatser
                 offset -= limit;
             }
 
-            UpdateHallplatser();
+            UpdateAnstallda();
         }
 
         private void b_nasta_Click(object sender, RoutedEventArgs e)
         {
             offset += limit;
-            UpdateHallplatser();
+            UpdateAnstallda();
         }
 
         private void b_uppdatera_Click(object sender, RoutedEventArgs e)
         {
-            UpdateHallplatser();
+            UpdateAnstallda();
         }
 
         private void b_ny_Click(object sender, RoutedEventArgs e)
         {
-            andraHallplats = new AndraHallplatsWindow(this);
-            andraHallplats.Show();
+            andraAnstalld = new AndraAnstalldWindow(this);
+            andraAnstalld.Show();
             b_ny.IsEnabled = false;
             b_redigeramarkerad.IsEnabled = false;
             b_tabortmarkerad.IsEnabled = false;
@@ -116,8 +115,8 @@ namespace Mortfors.Anstalld.Hallplatser
         {
             if (lv_lista.SelectedItem != null)
             {
-                andraHallplats = new AndraHallplatsWindow(this, (HallplatsObject)lv_lista.SelectedItem);
-                andraHallplats.Show();
+                andraAnstalld = new AndraAnstalldWindow(this, (AnstalldObject)lv_lista.SelectedItem);
+                andraAnstalld.Show();
                 b_ny.IsEnabled = false;
                 b_redigeramarkerad.IsEnabled = false;
                 b_tabortmarkerad.IsEnabled = false;
@@ -132,10 +131,11 @@ namespace Mortfors.Anstalld.Hallplatser
         {
             if (lv_lista.SelectedItem != null)
             {
-                if (DBConnection.DeleteHallplats((HallplatsObject)lv_lista.SelectedItem) > 0)
+                if (DBConnection.DeleteAnstalld((AnstalldObject)lv_lista.SelectedItem) > 0)
                 {
                     parentWindow.UpdateAllChain();
                 }
+
 
             }
             else
