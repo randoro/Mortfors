@@ -104,23 +104,22 @@ namespace Mortfors.Anstalld.Hallplatser
 
         private void b_ny_Click(object sender, RoutedEventArgs e)
         {
-            andraHallplats = new AndraHallplatsWindow(this);
-            andraHallplats.Show();
             b_ny.IsEnabled = false;
             b_redigeramarkerad.IsEnabled = false;
             b_tabortmarkerad.IsEnabled = false;
-
+            andraHallplats = new AndraHallplatsWindow(this);
+            andraHallplats.ShowDialog();
         }
 
         private void b_redigeramarkerad_Click(object sender, RoutedEventArgs e)
         {
             if (lv_lista.SelectedItem != null)
             {
-                andraHallplats = new AndraHallplatsWindow(this, (HallplatsObject)lv_lista.SelectedItem);
-                andraHallplats.Show();
                 b_ny.IsEnabled = false;
                 b_redigeramarkerad.IsEnabled = false;
                 b_tabortmarkerad.IsEnabled = false;
+                andraHallplats = new AndraHallplatsWindow(this, (HallplatsObject)lv_lista.SelectedItem);
+                andraHallplats.ShowDialog();
             }
             else
             {

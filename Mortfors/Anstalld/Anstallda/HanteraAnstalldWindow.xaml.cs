@@ -103,23 +103,22 @@ namespace Mortfors.Anstalld.Anstallda
 
         private void b_ny_Click(object sender, RoutedEventArgs e)
         {
-            andraAnstalld = new AndraAnstalldWindow(this);
-            andraAnstalld.Show();
             b_ny.IsEnabled = false;
             b_redigeramarkerad.IsEnabled = false;
             b_tabortmarkerad.IsEnabled = false;
-
+            andraAnstalld = new AndraAnstalldWindow(this);
+            andraAnstalld.ShowDialog();
         }
 
         private void b_redigeramarkerad_Click(object sender, RoutedEventArgs e)
         {
             if (lv_lista.SelectedItem != null)
             {
-                andraAnstalld = new AndraAnstalldWindow(this, (AnstalldObject)lv_lista.SelectedItem);
-                andraAnstalld.Show();
                 b_ny.IsEnabled = false;
                 b_redigeramarkerad.IsEnabled = false;
                 b_tabortmarkerad.IsEnabled = false;
+                andraAnstalld = new AndraAnstalldWindow(this, (AnstalldObject)lv_lista.SelectedItem);
+                andraAnstalld.ShowDialog();
             }
             else
             {

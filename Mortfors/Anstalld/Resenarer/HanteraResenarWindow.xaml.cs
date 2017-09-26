@@ -103,23 +103,22 @@ namespace Mortfors.Anstalld.Resenarer
 
         private void b_ny_Click(object sender, RoutedEventArgs e)
         {
-            andraResenar = new AndraResenarWindow(this);
-            andraResenar.Show();
             b_ny.IsEnabled = false;
             b_redigeramarkerad.IsEnabled = false;
             b_tabortmarkerad.IsEnabled = false;
-
+            andraResenar = new AndraResenarWindow(this);
+            andraResenar.ShowDialog();
         }
 
         private void b_redigeramarkerad_Click(object sender, RoutedEventArgs e)
         {
             if (lv_lista.SelectedItem != null)
             {
-                andraResenar = new AndraResenarWindow(this, (ResenarObject)lv_lista.SelectedItem);
-                andraResenar.Show();
                 b_ny.IsEnabled = false;
                 b_redigeramarkerad.IsEnabled = false;
                 b_tabortmarkerad.IsEnabled = false;
+                andraResenar = new AndraResenarWindow(this, (ResenarObject)lv_lista.SelectedItem);
+                andraResenar.ShowDialog();
             }
             else
             {

@@ -152,18 +152,43 @@ namespace Mortfors
 
         private void b_nyresa_Click(object sender, RoutedEventArgs e)
         {
-            andraBussresaWindow = new AndraBussresaWindow();
-            andraBussresaWindow.Show();
+            b_nyresa.IsEnabled = false;
+            b_redigeramarkerad.IsEnabled = false;
+            b_tabortmarkerad.IsEnabled = false;
+            andraBussresaWindow = new AndraBussresaWindow(this);
+            andraBussresaWindow.ShowDialog();
         }
 
         private void b_redigeramarkerad_Click(object sender, RoutedEventArgs e)
         {
-
+            if (lv_bussresor.SelectedItem != null)
+            {
+                b_nyresa.IsEnabled = false;
+                b_redigeramarkerad.IsEnabled = false;
+                b_tabortmarkerad.IsEnabled = false;
+                andraBussresaWindow = new AndraBussresaWindow(this, (BussresaObject)lv_bussresor.SelectedItem);
+                andraBussresaWindow.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void b_tabortmarkerad_Click(object sender, RoutedEventArgs e)
         {
+            if (lv_bussresor.SelectedItem != null)
+            {
+                if (DBConnection.DeleteBussresa((BussresaObject)lv_bussresor.SelectedItem) > 0)
+                {
+                    UpdateAllChain();
+                }
 
+            }
+            else
+            {
+                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
 

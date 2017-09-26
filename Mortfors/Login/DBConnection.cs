@@ -294,6 +294,54 @@ namespace Mortfors.Login
             return returnObj;
         }
 
+        public static int InsertBussresa(BussresaObject newObject)
+        {
+            int affectedRows = -1;
+            if (newObject.chaffor_id == "")
+            {
+                affectedRows = ExecuteAndGetNonQuery("INSERT INTO bussresa (bussresa_id, avgangs_adress, avgangs_stad, avgangs_land, avgangs_datum, ankomst_adress, ankomst_stad, ankomst_land, ankomst_datum, kostnad, max_platser) values (:p0, :p1, :p2, :p3, :p4, :p5, :p6, :p7, :p8, :p9, :p10);", newObject.bussresa_id, newObject.avgangs_adress, newObject.avgangs_stad, newObject.avgangs_land, newObject.avgangs_datum, newObject.ankomst_adress, newObject.ankomst_stad, newObject.ankomst_land, newObject.ankomst_datum, newObject.kostnad, newObject.max_platser);
+            }
+            else
+            {
+                affectedRows = ExecuteAndGetNonQuery("INSERT INTO bussresa (bussresa_id, avgangs_adress, avgangs_stad, avgangs_land, avgangs_datum, ankomst_adress, ankomst_stad, ankomst_land, ankomst_datum, kostnad, max_platser, chaffor_id) values (:p0, :p1, :p2, :p3, :p4, :p5, :p6, :p7, :p8, :p9, :p10, :p11);", newObject.bussresa_id, newObject.avgangs_adress, newObject.avgangs_stad, newObject.avgangs_land, newObject.avgangs_datum, newObject.ankomst_adress, newObject.ankomst_stad, newObject.ankomst_land, newObject.ankomst_datum, newObject.kostnad, newObject.max_platser, newObject.chaffor_id);
+            }
+            return affectedRows;
+
+
+        }
+
+        public static int UpdateBussresa(BussresaObject newObject, BussresaObject oldObject)
+        {
+            int affectedRows = -1;
+            if(newObject.chaffor_id == "")
+            {
+                affectedRows = ExecuteAndGetNonQuery("UPDATE bussresa SET bussresa_id = :p0, avgangs_adress = :p1, avgangs_stad = :p2, avgangs_land = :p3, avgangs_datum = :p4, ankomst_adress = :p5, ankomst_stad = :p6, ankomst_land = :p7, ankomst_datum = :p8, kostnad = :p9, max_platser = :p10 WHERE bussresa_id = :p11;", newObject.bussresa_id, newObject.avgangs_adress, newObject.avgangs_stad, newObject.avgangs_land, newObject.avgangs_datum, newObject.ankomst_adress, newObject.ankomst_stad, newObject.ankomst_land, newObject.ankomst_datum, newObject.kostnad, newObject.max_platser, oldObject.bussresa_id);
+
+            }
+            else
+            {
+                affectedRows = ExecuteAndGetNonQuery("UPDATE bussresa SET bussresa_id = :p0, avgangs_adress = :p1, avgangs_stad = :p2, avgangs_land = :p3, avgangs_datum = :p4, ankomst_adress = :p5, ankomst_stad = :p6, ankomst_land = :p7, ankomst_datum = :p8, kostnad = :p9, max_platser = :p10, chaffor_id = :p11 WHERE bussresa_id = :p12;", newObject.bussresa_id, newObject.avgangs_adress, newObject.avgangs_stad, newObject.avgangs_land, newObject.avgangs_datum, newObject.ankomst_adress, newObject.ankomst_stad, newObject.ankomst_land, newObject.ankomst_datum, newObject.kostnad, newObject.max_platser, newObject.chaffor_id, oldObject.bussresa_id);
+
+            }
+            return affectedRows;
+        }
+
+        public static int DeleteBussresa(BussresaObject oldObject)
+        {
+            int bokningarCount = 0;
+            bokningarCount = ExecuteAndGetScalar("SELECT count(*) FROM bokning WHERE bokning.bussresa_id = :p0;", oldObject.bussresa_id);
+            
+            int affectedRows = -1;
+
+            MessageBoxResult result = MessageBox.Show("Om du tar bort den här bussresan försvinner totalt " + bokningarCount + " bokningar! Vill du fortfarande ta bort bussresan?", "Varning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                ExecuteAndGetNonQuery("DELETE FROM bokning WHERE bussresa_id = :p0;", oldObject.bussresa_id);
+                affectedRows = ExecuteAndGetNonQuery("DELETE FROM bussresa WHERE bussresa_id = :p0;", oldObject.bussresa_id);
+            }
+            return affectedRows;
+        }
+
         #endregion bussresa;
 
         #region hallplats
@@ -498,7 +546,7 @@ namespace Mortfors.Login
 
             int affectedRows = -1;
 
-            MessageBoxResult result = MessageBox.Show("Om du tar bort den här anställda personen försvinner den anställda som chafför på totalt " + bussresaCount + " bussresor! (Men bussresorna finns fortfarande kvar ändå.) Vill du fortfarande ta bort resenären?", "Varning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            MessageBoxResult result = MessageBox.Show("Om du tar bort den här anställda personen försvinner den anställda som chafför på totalt " + bussresaCount + " bussresor! (Men bussresorna finns fortfarande kvar ändå.) Vill du fortfarande ta bort den anställda?", "Varning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Yes)
             {
                 ExecuteAndGetNonQuery("UPDATE bussresa SET chaffor_id = NULL WHERE chaffor_id = :p0;", oldObject.personNummer);
