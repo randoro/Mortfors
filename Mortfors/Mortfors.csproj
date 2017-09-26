@@ -120,6 +120,12 @@
     <Compile Include="Anstalld\Resenarer\HanteraResenarWindow.xaml.cs">
       <DependentUpon>HanteraResenarWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Anstalld\ValjAnstalldWindow.xaml.cs">
+      <DependentUpon>ValjAnstalldWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Anstalld\ValjHallplatsWindow.xaml.cs">
+      <DependentUpon>ValjHallplatsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SQLObject\AnstalldObject.cs" />
     <Compile Include="Anstalld\AnstalldWindow.xaml.cs">
       <DependentUpon>AnstalldWindow.xaml</DependentUpon>
@@ -164,6 +170,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Anstalld\Resenarer\HanteraResenarWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Anstalld\ValjAnstalldWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Anstalld\ValjHallplatsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

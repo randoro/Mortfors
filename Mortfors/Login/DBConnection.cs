@@ -525,6 +525,36 @@ namespace Mortfors.Login
             return returnObj;
         }
 
+        public static List<AnstalldObject> SelectChafforer(int limit, int offset)
+        {
+            List<AnstalldObject> returnObj = new List<AnstalldObject>();
+
+            NpgsqlConnection conn = null;
+            NpgsqlDataReader dr = null;
+
+            try
+            {
+                conn = OpenConnectionAndGetReader("SELECT * from anstalld where admin = 0 order by lower(pers_nr) limit :p0 offset :p1;", out dr, limit, offset);
+                while (dr.Read())
+                {
+                    string pers_nr = dr.GetFieldValue<string>(dr.GetOrdinal("pers_nr"));
+                    string hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("losenord"));
+                    bool isAdmin = ((dr.GetFieldValue<Int32>(dr.GetOrdinal("admin")) == 0) ? false : true);
+                    string namn = dr.GetFieldValue<string>(dr.GetOrdinal("namn"));
+                    string adress = dr.GetFieldValue<string>(dr.GetOrdinal("adress"));
+                    string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("hem_telefon"));
+
+                    returnObj.Add(new AnstalldObject(pers_nr, hashedPassword, isAdmin, namn, adress, telefon));
+                }
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return returnObj;
+        }
+
         public static int InsertAnstalld(AnstalldObject newObject)
         {
             int affectedRows = ExecuteAndGetNonQuery("INSERT INTO anstalld (pers_nr, losenord, admin, namn, adress, hem_telefon) values (:p0, :p1, :p2, :p3, :p4, :p5);", newObject.personNummer, newObject.hashedPassword, newObject.isAdmin ? 1 : 0, newObject.namn, newObject.adress, newObject.telefon);

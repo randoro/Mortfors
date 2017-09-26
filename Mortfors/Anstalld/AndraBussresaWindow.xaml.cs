@@ -26,9 +26,11 @@ namespace Mortfors.Anstalld
         public AnstalldWindow parentWindow;
         readonly BussresaObject oldObject;
         bool newbussresa;
+        ValjHallplatsWindow valjHallplatsWindow;
+        ValjAnstalldWindow valjAnstalldWindow;
 
-        HallplatsObject avgangsObject;
-        HallplatsObject ankomstObject;
+        public HallplatsObject avgangsObject;
+        public HallplatsObject ankomstObject;
 
         public AndraBussresaWindow(AnstalldWindow _parent)
         {
@@ -106,17 +108,29 @@ namespace Mortfors.Anstalld
 
         private void b_andra_avgang_Click(object sender, RoutedEventArgs e)
         {
-
+            b_andra_avgang.IsEnabled = false;
+            b_andra_ankomst.IsEnabled = false;
+            b_andra_chaffor_id.IsEnabled = false;
+            valjHallplatsWindow = new ValjHallplatsWindow(this, true);
+            valjHallplatsWindow.ShowDialog();
         }
 
         private void b_andra_ankomst_Click(object sender, RoutedEventArgs e)
         {
-
+            b_andra_avgang.IsEnabled = false;
+            b_andra_ankomst.IsEnabled = false;
+            b_andra_chaffor_id.IsEnabled = false;
+            valjHallplatsWindow = new ValjHallplatsWindow(this, false);
+            valjHallplatsWindow.ShowDialog();
         }
 
         private void b_andra_chaffor_id_Click(object sender, RoutedEventArgs e)
         {
-
+            b_andra_avgang.IsEnabled = false;
+            b_andra_ankomst.IsEnabled = false;
+            b_andra_chaffor_id.IsEnabled = false;
+            valjAnstalldWindow = new ValjAnstalldWindow(this);
+            valjAnstalldWindow.ShowDialog();
         }
     }
 }
