@@ -10,7 +10,7 @@
     <Grid>
         <Label x:Name="l_email" Content="Email:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tb_email" HorizontalAlignment="Left" Height="23" Margin="93,13,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="217"/>
-        <Label x:Name="l_losenord" Content="L�senord:" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="l_losenord" Content="Lösenord:" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top"/>
         <PasswordBox x:Name="pb_losenord" HorizontalAlignment="Left" Height="23" Margin="93,41,0,0" VerticalAlignment="Top" Width="217"/>
         <Label x:Name="l_namn" Content="Namn:" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="tb_namn" HorizontalAlignment="Left" Height="23" Margin="93,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="217"/>

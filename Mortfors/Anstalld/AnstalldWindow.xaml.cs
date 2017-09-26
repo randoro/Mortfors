@@ -1,3 +1,4 @@
+using Mortfors.Anstalld;
 using Mortfors.Anstalld.Anstallda;
 using Mortfors.Anstalld.Hallplatser;
 using Mortfors.Anstalld.Resenarer;
@@ -29,6 +30,8 @@ namespace Mortfors
         HanteraHallplatsWindow hallplatsWindow;
         HanteraResenarWindow resenarWindow;
         HanteraAnstalldWindow anstalldWindow;
+
+        AndraBussresaWindow andraBussresaWindow;
 
         const int limit = 2;
         public int offset = 0;
@@ -146,6 +149,23 @@ namespace Mortfors
         {
             UpdateBussResor();
         }
+
+        private void b_nyresa_Click(object sender, RoutedEventArgs e)
+        {
+            andraBussresaWindow = new AndraBussresaWindow();
+            andraBussresaWindow.Show();
+        }
+
+        private void b_redigeramarkerad_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void b_tabortmarkerad_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
 
         private void b_hanterahallplatser_Click(object sender, RoutedEventArgs e)
         {
