@@ -15,43 +15,43 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Mortfors.Anstalld.Hallplatser
+namespace Mortfors.Anstalld.Bokningar
 {
     /// <summary>
-    /// Interaction logic for HallplatsWindow.xaml
+    /// Interaction logic for HanteraBokningWindow.xaml
     /// </summary>
-    public partial class HanteraHallplatsWindow : Window
+    public partial class HanteraBokningWindow : Window
     {
         public AnstalldWindow parentWindow;
-        AndraHallplatsWindow andraHallplats;
-        List<HallplatsObject> hallplatsObject;
+        AndraBokningWindow andraBokning;
+        List<BokningObject> bokningObject;
 
-        
+
         const int limit = 10;
         public int offset = 0;
         public int count = 0;
 
-        public HanteraHallplatsWindow(AnstalldWindow _parent)
+        public HanteraBokningWindow(AnstalldWindow _parent)
         {
             InitializeComponent();
             parentWindow = _parent;
-            hallplatsObject = new List<HallplatsObject>();
-            this.Title = "Hantera Hållplatser - Välkommen " + Authenticator.GetUserInfo() + ".";
-            UpdateHallplatser();
+            bokningObject = new List<BokningObject>();
+            this.Title = "Hantera Bokningar - Välkommen " + Authenticator.GetUserInfo() + ".";
+            UpdateBokningar();
 
         }
 
-        void HanteraHallplatsWindow_Closing(object sender, CancelEventArgs e)
+        void HanteraBokningWindow_Closing(object sender, CancelEventArgs e)
         {
-            parentWindow.b_hanterahallplatser.IsEnabled = true;
+            parentWindow.b_hanterabokningar.IsEnabled = true;
         }
 
-        public void UpdateHallplatser()
+        public void UpdateBokningar()
         {
-            
-            count = DBConnection.CountHallplatser();
-            hallplatsObject = DBConnection.SelectHallplatser(limit, offset);
-            lv_lista.ItemsSource = hallplatsObject;
+
+            count = DBConnection.CountBokningar();
+            bokningObject = DBConnection.SelectBokningar(limit, offset);
+            lv_lista.ItemsSource = bokningObject;
             l_visar.Content = "Visar " + offset + " - " + (offset + limit) + " av " + count + ".";
             DisableButtons();
         }
@@ -88,18 +88,18 @@ namespace Mortfors.Anstalld.Hallplatser
                 offset -= limit;
             }
 
-            UpdateHallplatser();
+            UpdateBokningar();
         }
 
         private void b_nasta_Click(object sender, RoutedEventArgs e)
         {
             offset += limit;
-            UpdateHallplatser();
+            UpdateBokningar();
         }
 
         private void b_uppdatera_Click(object sender, RoutedEventArgs e)
         {
-            UpdateHallplatser();
+            UpdateBokningar();
         }
 
         private void b_ny_Click(object sender, RoutedEventArgs e)
@@ -107,8 +107,8 @@ namespace Mortfors.Anstalld.Hallplatser
             b_ny.IsEnabled = false;
             b_redigeramarkerad.IsEnabled = false;
             b_tabortmarkerad.IsEnabled = false;
-            andraHallplats = new AndraHallplatsWindow(this);
-            andraHallplats.ShowDialog();
+            andraBokning = new AndraBokningWindow(this);
+            andraBokning.ShowDialog();
         }
 
         private void b_redigeramarkerad_Click(object sender, RoutedEventArgs e)
@@ -118,8 +118,8 @@ namespace Mortfors.Anstalld.Hallplatser
                 b_ny.IsEnabled = false;
                 b_redigeramarkerad.IsEnabled = false;
                 b_tabortmarkerad.IsEnabled = false;
-                andraHallplats = new AndraHallplatsWindow(this, (HallplatsObject)lv_lista.SelectedItem);
-                andraHallplats.ShowDialog();
+                andraBokning = new AndraBokningWindow(this, (BokningObject)lv_lista.SelectedItem);
+                andraBokning.ShowDialog();
             }
             else
             {
@@ -131,7 +131,7 @@ namespace Mortfors.Anstalld.Hallplatser
         {
             if (lv_lista.SelectedItem != null)
             {
-                if (DBConnection.DeleteHallplats((HallplatsObject)lv_lista.SelectedItem) > 0)
+                if (DBConnection.DeleteBokning((BokningObject)lv_lista.SelectedItem) > 0)
                 {
                     parentWindow.UpdateAllChain();
                 }

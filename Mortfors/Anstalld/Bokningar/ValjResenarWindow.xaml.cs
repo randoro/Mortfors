@@ -15,47 +15,43 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Mortfors.Anstalld
+namespace Mortfors.Anstalld.Bokningar
 {
     /// <summary>
-    /// Interaction logic for ValjHallplatsWindow.xaml
+    /// Interaction logic for ValjResenarWindow.xaml
     /// </summary>
-    public partial class ValjHallplatsWindow : Window
+    public partial class ValjResenarWindow : Window
     {
-        public AndraBussresaWindow parentWindow;
-        List<HallplatsObject> hallplatsObject;
-
-        bool isAvgang;
+        public AndraBokningWindow parentWindow;
+        List<ResenarObject> resenarObject;
 
 
         const int limit = 10;
         public int offset = 0;
         public int count = 0;
 
-        public ValjHallplatsWindow(AndraBussresaWindow _parent, bool _isAvgang)
+        public ValjResenarWindow(AndraBokningWindow _parent)
         {
             InitializeComponent();
             parentWindow = _parent;
-            isAvgang = _isAvgang;
-            hallplatsObject = new List<HallplatsObject>();
-            this.Title = "Välj Hållplats - Välkommen " + Authenticator.GetUserInfo() + ".";
-            UpdateHallplatser();
+            resenarObject = new List<ResenarObject>();
+            this.Title = "Välj Resenär - Välkommen " + Authenticator.GetUserInfo() + ".";
+            UpdateResenarer();
 
         }
 
-        void ValjHallplatsWindow_Closing(object sender, CancelEventArgs e)
+        void ValjResenarWindow_Closing(object sender, CancelEventArgs e)
         {
-            parentWindow.b_andra_avgang.IsEnabled = true;
-            parentWindow.b_andra_ankomst.IsEnabled = true;
-            parentWindow.b_andra_chaffor_id.IsEnabled = true;
+            parentWindow.b_andra_bussresa_id.IsEnabled = true;
+            parentWindow.b_andra_resenar.IsEnabled = true;
         }
 
-        public void UpdateHallplatser()
+        public void UpdateResenarer()
         {
 
-            count = DBConnection.CountHallplatser();
-            hallplatsObject = DBConnection.SelectHallplatser(limit, offset);
-            lv_lista.ItemsSource = hallplatsObject;
+            count = DBConnection.CountResenarer();
+            resenarObject = DBConnection.SelectResenarer(limit, offset);
+            lv_lista.ItemsSource = resenarObject;
             l_visar.Content = "Visar " + offset + " - " + (offset + limit) + " av " + count + ".";
             DisableButtons();
         }
@@ -92,18 +88,18 @@ namespace Mortfors.Anstalld
                 offset -= limit;
             }
 
-            UpdateHallplatser();
+            UpdateResenarer();
         }
 
         private void b_nasta_Click(object sender, RoutedEventArgs e)
         {
             offset += limit;
-            UpdateHallplatser();
+            UpdateResenarer();
         }
 
         private void b_uppdatera_Click(object sender, RoutedEventArgs e)
         {
-            UpdateHallplatser();
+            UpdateResenarer();
         }
 
         private void b_avbryt_Click(object sender, RoutedEventArgs e)
@@ -115,22 +111,9 @@ namespace Mortfors.Anstalld
         {
             if (lv_lista.SelectedItem != null)
             {
-                HallplatsObject selected = (HallplatsObject)lv_lista.SelectedItem;
+                ResenarObject selected = (ResenarObject)lv_lista.SelectedItem;
+                parentWindow.tb_resenar.Text = selected.email;
 
-                if (isAvgang)
-                {
-                    parentWindow.avgangs_adress = selected.gatu_adress;
-                    parentWindow.avgangs_stad = selected.stad;
-                    parentWindow.avgangs_land = selected.land;
-                    parentWindow.tb_avgang.Text = selected.gatu_adress + ", " + selected.stad + ", " + selected.land;
-                }
-                else
-                {
-                    parentWindow.ankomst_adress = selected.gatu_adress;
-                    parentWindow.ankomst_stad = selected.stad;
-                    parentWindow.ankomst_land = selected.land;
-                    parentWindow.tb_ankomst.Text = selected.gatu_adress + ", " + selected.stad + ", " + selected.land;
-                }
                 Close();
             }
             else
@@ -138,6 +121,6 @@ namespace Mortfors.Anstalld
                 MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
-
     }
 }
+

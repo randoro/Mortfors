@@ -29,8 +29,13 @@ namespace Mortfors.Anstalld
         ValjHallplatsWindow valjHallplatsWindow;
         ValjAnstalldWindow valjAnstalldWindow;
 
-        public HallplatsObject avgangsObject;
-        public HallplatsObject ankomstObject;
+        public string avgangs_adress;
+        public string avgangs_stad;
+        public string avgangs_land;
+        
+        public string ankomst_adress;
+        public string ankomst_stad;
+        public string ankomst_land;
 
         public AndraBussresaWindow(AnstalldWindow _parent)
         {
@@ -54,8 +59,14 @@ namespace Mortfors.Anstalld
             tb_max_platser.Text = oldObject.max_platser.ToString();
             tb_chaffor_id.Text = (oldObject.chaffor_id == null) ? "" : oldObject.chaffor_id.ToString();
 
-            avgangsObject = new HallplatsObject(oldObject.avgangs_adress, oldObject.avgangs_stad, oldObject.avgangs_land);
-            ankomstObject = new HallplatsObject(oldObject.ankomst_adress, oldObject.ankomst_stad, oldObject.ankomst_land);
+            avgangs_adress = oldObject.avgangs_adress;
+            avgangs_stad = oldObject.avgangs_stad;
+            avgangs_land = oldObject.avgangs_land;
+
+            ankomst_adress = oldObject.ankomst_adress;
+            ankomst_stad = oldObject.ankomst_stad;
+            ankomst_land = oldObject.ankomst_land;
+            
 
             parentWindow = _parent;
             newbussresa = false;
@@ -76,14 +87,14 @@ namespace Mortfors.Anstalld
 
         private void b_spara_Click(object sender, RoutedEventArgs e)
         {
-            if (tb_bussresa_id.Text == "" || avgangsObject == null || tb_avgang.Text == "" || dtp_avgangsdatum.Value == null || ankomstObject == null || tb_ankomst.Text == "" || dtp_ankomstdatum.Value == null || tb_kostnad.Text == "" || tb_max_platser.Text == "")
+            if (tb_bussresa_id.Text == "" || avgangs_adress == "" || avgangs_stad == "" || avgangs_land == "" || dtp_avgangsdatum.Value == null || ankomst_adress == "" || ankomst_stad == "" || ankomst_land == "" || dtp_ankomstdatum.Value == null || tb_kostnad.Text == "" || tb_max_platser.Text == "")
             {
                 MessageBox.Show("Tomma fält är inte tillåtna. (Förutom Chafför ID)", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
 
-            BussresaObject newObject = new BussresaObject(Int32.Parse(tb_bussresa_id.Text), avgangsObject.gatu_adress, avgangsObject.stad, avgangsObject.land, (DateTime)dtp_avgangsdatum.Value, ankomstObject.gatu_adress, ankomstObject.stad, ankomstObject.land, (DateTime)dtp_ankomstdatum.Value, Int32.Parse(tb_kostnad.Text), Int32.Parse(tb_max_platser.Text), tb_chaffor_id.Text);
+            BussresaObject newObject = new BussresaObject(Int32.Parse(tb_bussresa_id.Text), avgangs_adress, avgangs_stad, avgangs_land, (DateTime)dtp_avgangsdatum.Value, ankomst_adress, ankomst_stad, ankomst_land, (DateTime)dtp_ankomstdatum.Value, Int32.Parse(tb_kostnad.Text), Int32.Parse(tb_max_platser.Text), tb_chaffor_id.Text);
 
             if (newbussresa)
             {

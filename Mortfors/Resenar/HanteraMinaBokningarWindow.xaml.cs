@@ -15,44 +15,42 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Mortfors.Anstalld
+namespace Mortfors.Resenar
 {
     /// <summary>
-    /// Interaction logic for ValjAnstalldWindow.xaml
+    /// Interaction logic for HanteraMinaBokningarWindow.xaml
     /// </summary>
-    public partial class ValjAnstalldWindow : Window
+    public partial class HanteraMinaBokningarWindow : Window
     {
-        public AndraBussresaWindow parentWindow;
-        List<AnstalldObject> anstalldObject;
-        
+        public ResenarWindow parentWindow;
+        List<MinBokningObject> bokningObject;
+
 
         const int limit = 10;
         public int offset = 0;
         public int count = 0;
 
-        public ValjAnstalldWindow(AndraBussresaWindow _parent)
+        public HanteraMinaBokningarWindow(ResenarWindow _parent)
         {
             InitializeComponent();
             parentWindow = _parent;
-            anstalldObject = new List<AnstalldObject>();
-            this.Title = "Välj Chafför - Välkommen " + Authenticator.GetUserInfo() + ".";
-            UpdateHallplatser();
+            bokningObject = new List<MinBokningObject>();
+            this.Title = "Hantera Bokningar - Välkommen " + Authenticator.GetUserInfo() + ".";
+            UpdateBokningar();
 
         }
 
-        void ValjAnstalldWindow_Closing(object sender, CancelEventArgs e)
+        void HanteraMinaBokningarWindow_Closing(object sender, CancelEventArgs e)
         {
-            parentWindow.b_andra_avgang.IsEnabled = true;
-            parentWindow.b_andra_ankomst.IsEnabled = true;
-            parentWindow.b_andra_chaffor_id.IsEnabled = true;
+            parentWindow.b_minabokningar.IsEnabled = true;
         }
 
-        public void UpdateHallplatser()
+        public void UpdateBokningar()
         {
-
-            count = DBConnection.CountHallplatser();
-            anstalldObject = DBConnection.SelectChafforer(limit, offset);
-            lv_lista.ItemsSource = anstalldObject;
+            this.Title = "Hantera Bokningar - Välkommen " + Authenticator.GetUserInfo() + ".";
+            count = DBConnection.CountBokningar();
+            bokningObject = DBConnection.SelectBokningarJoinBussresa(((ResenarObject)Authenticator.currentUser).email, limit, offset);
+            lv_lista.ItemsSource = bokningObject;
             l_visar.Content = "Visar " + offset + " - " + (offset + limit) + " av " + count + ".";
             DisableButtons();
         }
@@ -89,33 +87,32 @@ namespace Mortfors.Anstalld
                 offset -= limit;
             }
 
-            UpdateHallplatser();
+            UpdateBokningar();
         }
 
         private void b_nasta_Click(object sender, RoutedEventArgs e)
         {
             offset += limit;
-            UpdateHallplatser();
+            UpdateBokningar();
         }
 
         private void b_uppdatera_Click(object sender, RoutedEventArgs e)
         {
-            UpdateHallplatser();
+            UpdateBokningar();
         }
 
-        private void b_avbryt_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-        private void b_valj_Click(object sender, RoutedEventArgs e)
+        private void b_tabortmarkerad_Click(object sender, RoutedEventArgs e)
         {
             if (lv_lista.SelectedItem != null)
             {
-                AnstalldObject selected = (AnstalldObject)lv_lista.SelectedItem;
-                parentWindow.tb_chaffor_id.Text = selected.personNummer;
-               
-                Close();
+                MinBokningObject minBokning = (MinBokningObject)lv_lista.SelectedItem;
+
+                BokningObject bokning = new BokningObject(minBokning.bussresa.bussresa_id, minBokning.resenar, minBokning.antal_platser);
+                if (DBConnection.DeleteBokning(bokning) > 0)
+                {
+                    parentWindow.UpdateAllChain();
+                }
+
             }
             else
             {

@@ -1,0 +1,23 @@
+<Window x:Class="Mortfors.Anstalld.Bokningar.AndraBokningWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mortfors.Anstalld.Bokningar"
+        mc:Ignorable="d"
+        Closing="AndraBokningWindow_Closing"
+        Title="AndraBokningWindow" Height="187.025" Width="412.1">
+    <Grid>
+        <Label x:Name="l_bussresa_id" Content="Bussresa ID:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb_bussresa_id" HorizontalAlignment="Left" Height="23" Margin="93,13,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="217" IsEnabled="False" PreviewTextInput="NumberValidationTextBox"/>
+        <Button x:Name="b_andra_bussresa_id" Content="Ändra" HorizontalAlignment="Left" Margin="315,13,0,0" VerticalAlignment="Top" Width="75" Click="b_andra_bussresa_id_Click" Height="23"/>
+        <Label x:Name="l_resenar" Content="Resenär:" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb_resenar" HorizontalAlignment="Left" Height="23" Margin="93,41,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="217" IsEnabled="False"/>
+        <Button x:Name="b_andra_resenar" Content="Ändra" HorizontalAlignment="Left" Margin="315,41,0,0" VerticalAlignment="Top" Width="75" Click="b_andra_resenar_Click" Height="23"/>
+        <Label x:Name="l_antal_platser" Content="Antal Platser:" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb_antal_platser" HorizontalAlignment="Left" Height="23" Margin="93,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="217" PreviewTextInput="NumberValidationTextBox"/>
+        <Button x:Name="b_avbryt" Content="Avbryt" HorizontalAlignment="Left" Margin="14,126,0,0" VerticalAlignment="Top" Width="75" Click="b_avbryt_Click"/>
+        <Button x:Name="b_spara" Content="Spara" HorizontalAlignment="Left" Margin="315,126,0,0" VerticalAlignment="Top" Width="75" Click="b_spara_Click"/>
+
+    </Grid>
+</Window>

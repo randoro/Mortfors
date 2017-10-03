@@ -11,8 +11,8 @@
         <Grid HorizontalAlignment="Left" Height="327" Margin="10,10,0,0" VerticalAlignment="Top" Width="581">
             <Label x:Name="l_titel" Content="Välj Hållplats" HorizontalAlignment="Left" VerticalAlignment="Top" Width="261"/>
             <Label x:Name="l_visar" Content="Visar 0 - 10 av 545" HorizontalAlignment="Left" Margin="99,-6,0,0" VerticalAlignment="Top" Width="203" HorizontalContentAlignment="Right"/>
-            <Button x:Name="b_nasta" Content="Nästa 50 -&gt;" HorizontalAlignment="Left" Margin="391,1,0,0" VerticalAlignment="Top" Width="85" Click="b_nasta_Click"/>
-            <Button x:Name="b_forra" Content="&lt;- Förra 50" HorizontalAlignment="Left" Margin="302,0,0,0" VerticalAlignment="Top" Width="84" Click="b_forra_Click"/>
+            <Button x:Name="b_nasta" Content="Nästa 10 -&gt;" HorizontalAlignment="Left" Margin="391,1,0,0" VerticalAlignment="Top" Width="85" Click="b_nasta_Click"/>
+            <Button x:Name="b_forra" Content="&lt;- Förra 10" HorizontalAlignment="Left" Margin="302,0,0,0" VerticalAlignment="Top" Width="84" Click="b_forra_Click"/>
             <Button x:Name="b_uppdatera" Content="Uppdatera" HorizontalAlignment="Left" Margin="481,0,0,0" VerticalAlignment="Top" Width="83" Click="b_uppdatera_Click"/>
             <ListView x:Name="lv_lista" SelectionMode="Single" HorizontalAlignment="Left" Height="264" VerticalAlignment="Top" Width="568" Margin="0,26,0,0">
                 <ListView.View>

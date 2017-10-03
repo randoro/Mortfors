@@ -29,7 +29,7 @@ namespace Mortfors.Login
         /// </summary>
         /// <param name="query"></param>
         /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <returns>Returns Connection</returns>
         private static NpgsqlConnection OpenConnectionAndGetReader(string query, out NpgsqlDataReader reader, params object[] parameters)
         {
             NpgsqlConnection conn = null;
@@ -59,11 +59,11 @@ namespace Mortfors.Login
         }
 
         /// <summary>
-        /// For getting single values, COUNT, SUM
+        /// For getting single values, COUNT, SUM, returns single value int. Is -1 in failure.
         /// </summary>
         /// <param name="query"></param>
         /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <returns>Returns single value int</returns>
         private static int ExecuteAndGetScalar(string query, params object[] parameters)
         {
             NpgsqlConnection conn = null;
@@ -99,11 +99,11 @@ namespace Mortfors.Login
 
 
         /// <summary>
-        /// For getting affected rows, INSERT, DELETE, UPDATE
+        /// For getting affected rows, INSERT, DELETE, UPDATE, returns number of rows affected. Is -1 in failure.
         /// </summary>
         /// <param name="query"></param>
         /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <returns>Number of rows affected</returns>
         private static int ExecuteAndGetNonQuery(string query, params object[] parameters)
         {
             NpgsqlConnection conn = null;
@@ -244,16 +244,168 @@ namespace Mortfors.Login
 
         #endregion login
 
+        #region bokning
+
+        public static int CountBokningar()
+        {
+            int count = 0;
+            count = ExecuteAndGetScalar("SELECT count(*) from bokning;");
+            return count;
+        }
+
+        public static List<BokningObject> SelectBokningar(int limit, int offset)
+        {
+            List<BokningObject> returnObj = new List<BokningObject>();
+
+            NpgsqlConnection conn = null;
+            NpgsqlDataReader dr = null;
+
+            try
+            {
+                conn = OpenConnectionAndGetReader("SELECT * from bokning order by bussresa_id, lower(resenar) limit :p0 offset :p1;", out dr, limit, offset);
+                while (dr.Read())
+                {
+                    int bussresa_id = dr.GetFieldValue<int>(dr.GetOrdinal("bussresa_id"));
+                    string resenar = dr.GetFieldValue<string>(dr.GetOrdinal("resenar"));
+                    int antal_platser = dr.GetFieldValue<int>(dr.GetOrdinal("antal_platser"));
+
+                    returnObj.Add(new BokningObject(bussresa_id, resenar, antal_platser));
+                }
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return returnObj;
+        }
+
+        public static int InsertBokning(BokningObject newObject)
+        {
+            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO bokning (bussresa_id, resenar, antal_platser) values (:p0, :p1, :p2);", newObject.bussresa_id, newObject.resenar, newObject.antal_platser);
+            return affectedRows;
+
+
+        }
+
+        public static int UpdateBokning(BokningObject newObject, BokningObject oldObject)
+        {
+            int affectedRows = ExecuteAndGetNonQuery("UPDATE bokning SET bussresa_id = :p0, resenar = :p1, antal_platser = :p2 WHERE bussresa_id = :p3 AND resenar = :p4;", newObject.bussresa_id, newObject.resenar, newObject.antal_platser, oldObject.bussresa_id, oldObject.resenar);
+            return affectedRows;
+        }
+
+        public static int DeleteBokning(BokningObject oldObject)
+        {
+            
+            int affectedRows = -1;
+
+            MessageBoxResult result = MessageBox.Show("Vill du ta bort den här bokningen?", "Varning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                affectedRows = ExecuteAndGetNonQuery("DELETE FROM bokning WHERE bussresa_id = :p0 AND resenar = :p1;", oldObject.bussresa_id, oldObject.resenar);
+            }
+            return affectedRows;
+        }
+
+        public static bool CheckIfBokningAllowed(BokningObject newObject)
+        {
+            int max_platser = ExecuteAndGetScalar("SELECT max_platser FROM bussresa WHERE bussresa_id = :p0;", newObject.bussresa_id);
+
+            int currently_booked = ExecuteAndGetScalar("SELECT COALESCE(sum(antal_platser),0) FROM bokning WHERE bussresa_id = :p0;", newObject.bussresa_id);
+            
+            int possibly_current_Selected = ExecuteAndGetScalar("SELECT antal_platser FROM bokning WHERE bussresa_id = :p0 AND resenar = :p1;", newObject.bussresa_id, newObject.resenar);
+            if(possibly_current_Selected == -1)
+            {
+                possibly_current_Selected = 0;
+            }
+
+            if (currently_booked - possibly_current_Selected + newObject.antal_platser <= max_platser)
+            {
+                return true;
+            }
+            
+            return false;
+        }
+
+        public static bool CheckIfHasBokning(int bussresa_id, string resenar)
+        {
+            NpgsqlConnection conn = null;
+            NpgsqlDataReader dr = null;
+
+            try
+            {
+                conn = OpenConnectionAndGetReader("SELECT * FROM bokning WHERE bussresa_id = :p0 AND resenar = :p1;", out dr, bussresa_id, resenar);
+                if (dr.Read())
+                {
+                    return true;
+                }
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return false;
+            
+        }
+
+        public static List<MinBokningObject> SelectBokningarJoinBussresa(string _resenar, int limit, int offset)
+        {
+            List<MinBokningObject> returnObj = new List<MinBokningObject>();
+
+            NpgsqlConnection conn = null;
+            NpgsqlDataReader dr = null;
+
+            try
+            {
+                conn = OpenConnectionAndGetReader("SELECT * FROM (bokning JOIN bussresa ON bokning.bussresa_id = bussresa.bussresa_id) WHERE resenar = :p0 order by bokning.bussresa_id, lower(resenar) limit :p1 offset :p2;", out dr, _resenar, limit, offset);
+                while (dr.Read())
+                {
+                    int bussresa_id = dr.GetFieldValue<int>(dr.GetOrdinal("bussresa_id"));
+                    string avgangs_adress = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_adress"));
+                    string avgangs_stad = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_stad"));
+                    string avgangs_land = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_land"));
+                    DateTime avgangs_datum = dr.GetFieldValue<DateTime>(dr.GetOrdinal("avgangs_datum"));
+                    string ankomst_adress = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_adress"));
+                    string ankomst_stad = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_stad"));
+                    string ankomst_land = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_land"));
+                    DateTime ankomst_datum = dr.GetFieldValue<DateTime>(dr.GetOrdinal("ankomst_datum"));
+                    int kostnad = dr.GetFieldValue<int>(dr.GetOrdinal("kostnad"));
+                    int max_platser = dr.GetFieldValue<int>(dr.GetOrdinal("max_platser"));
+                    string chaffor_id = null;
+                    if (!dr.IsDBNull(dr.GetOrdinal("chaffor_id")))
+                    {
+                        chaffor_id = dr.GetFieldValue<string>(dr.GetOrdinal("chaffor_id"));
+                    }
+                    BussresaObject buss = new BussresaObject(bussresa_id, avgangs_adress, avgangs_stad, avgangs_land, avgangs_datum,
+                        ankomst_adress, ankomst_stad, ankomst_land, ankomst_datum, kostnad, max_platser, chaffor_id);
+
+                    string resenar = dr.GetFieldValue<string>(dr.GetOrdinal("resenar"));
+                    int antal_platser = dr.GetFieldValue<int>(dr.GetOrdinal("antal_platser"));
+
+                    returnObj.Add(new MinBokningObject(buss, resenar, antal_platser));
+                }
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return returnObj;
+        }
+
+        #endregion bokning
+
         #region bussresa
 
-        public static int CountBussResor()
+        public static int CountBussresor()
         {
             int count = 0;
             count = ExecuteAndGetScalar("SELECT count(*) from bussresa;");
             return count;
         }
 
-        public static List<BussresaObject> SelectBussResor(int limit, int offset)
+        public static List<BussresaObject> SelectBussresor(int limit, int offset)
         {
             List<BussresaObject> returnObj = new List<BussresaObject>();
 
@@ -315,7 +467,7 @@ namespace Mortfors.Login
             int affectedRows = -1;
             if(newObject.chaffor_id == "")
             {
-                affectedRows = ExecuteAndGetNonQuery("UPDATE bussresa SET bussresa_id = :p0, avgangs_adress = :p1, avgangs_stad = :p2, avgangs_land = :p3, avgangs_datum = :p4, ankomst_adress = :p5, ankomst_stad = :p6, ankomst_land = :p7, ankomst_datum = :p8, kostnad = :p9, max_platser = :p10 WHERE bussresa_id = :p11;", newObject.bussresa_id, newObject.avgangs_adress, newObject.avgangs_stad, newObject.avgangs_land, newObject.avgangs_datum, newObject.ankomst_adress, newObject.ankomst_stad, newObject.ankomst_land, newObject.ankomst_datum, newObject.kostnad, newObject.max_platser, oldObject.bussresa_id);
+                affectedRows = ExecuteAndGetNonQuery("UPDATE bussresa SET bussresa_id = :p0, avgangs_adress = :p1, avgangs_stad = :p2, avgangs_land = :p3, avgangs_datum = :p4, ankomst_adress = :p5, ankomst_stad = :p6, ankomst_land = :p7, ankomst_datum = :p8, kostnad = :p9, max_platser = :p10, chaffor_id = NULL WHERE bussresa_id = :p11;", newObject.bussresa_id, newObject.avgangs_adress, newObject.avgangs_stad, newObject.avgangs_land, newObject.avgangs_datum, newObject.ankomst_adress, newObject.ankomst_stad, newObject.ankomst_land, newObject.ankomst_datum, newObject.kostnad, newObject.max_platser, oldObject.bussresa_id);
 
             }
             else
@@ -340,6 +492,38 @@ namespace Mortfors.Login
                 affectedRows = ExecuteAndGetNonQuery("DELETE FROM bussresa WHERE bussresa_id = :p0;", oldObject.bussresa_id);
             }
             return affectedRows;
+        }
+
+        public static int SetBussresaChaffor(BussresaObject oldObject, string chaffor_id)
+        {
+            if(oldObject.chaffor_id == null || oldObject.chaffor_id == "")
+            {
+                BussresaObject newObject = new BussresaObject(oldObject.bussresa_id, oldObject.avgangs_adress, oldObject.avgangs_stad, oldObject.avgangs_land, oldObject.avgangs_datum, oldObject.ankomst_adress, oldObject.ankomst_stad, oldObject.ankomst_land, oldObject.ankomst_datum, oldObject.kostnad, oldObject.max_platser, chaffor_id);
+                return UpdateBussresa(newObject, oldObject);
+            }
+            else
+            {
+                MessageBoxResult result = MessageBox.Show("Du kan bara anmäla dig som chafför på bussresor som inte redan har en chafför.", "Varning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+
+
+            return -1;
+        }
+
+        public static int RemoveBussresaChaffor(BussresaObject oldObject, string chaffor_id)
+        {
+            if (oldObject.chaffor_id == null || oldObject.chaffor_id == chaffor_id)
+            {
+                BussresaObject newObject = new BussresaObject(oldObject.bussresa_id, oldObject.avgangs_adress, oldObject.avgangs_stad, oldObject.avgangs_land, oldObject.avgangs_datum, oldObject.ankomst_adress, oldObject.ankomst_stad, oldObject.ankomst_land, oldObject.ankomst_datum, oldObject.kostnad, oldObject.max_platser, "");
+                return UpdateBussresa(newObject, oldObject);
+            }
+            else
+            {
+                MessageBoxResult result = MessageBox.Show("Du kan bara avanmäla dig som på bussresor där du är chafför.", "Varning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+
+
+            return -1;
         }
 
         #endregion bussresa;

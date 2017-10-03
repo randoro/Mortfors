@@ -1,5 +1,6 @@
 using Mortfors.Anstalld;
 using Mortfors.Anstalld.Anstallda;
+using Mortfors.Anstalld.Bokningar;
 using Mortfors.Anstalld.Hallplatser;
 using Mortfors.Anstalld.Resenarer;
 using Mortfors.Login;
@@ -30,10 +31,11 @@ namespace Mortfors
         HanteraHallplatsWindow hallplatsWindow;
         HanteraResenarWindow resenarWindow;
         HanteraAnstalldWindow anstalldWindow;
+        HanteraBokningWindow bokningWindow;
 
         AndraBussresaWindow andraBussresaWindow;
 
-        const int limit = 2;
+        const int limit = 10;
         public int offset = 0;
         public int count = 0;
 
@@ -81,8 +83,8 @@ namespace Mortfors
 
         public void UpdateBussResor()
         {
-            count = DBConnection.CountBussResor();
-            lv_bussresor.ItemsSource = DBConnection.SelectBussResor(limit, offset);
+            count = DBConnection.CountBussresor();
+            lv_bussresor.ItemsSource = DBConnection.SelectBussresor(limit, offset);
             l_visar.Content = "Visar "+ offset + " - "+ (offset+limit) + " av " + count + ".";
             DisableButtons();
         }
@@ -101,6 +103,10 @@ namespace Mortfors
             if (anstalldWindow != null && anstalldWindow.Visibility == Visibility.Visible)
             {
                 anstalldWindow.UpdateAnstallda();
+            }
+            if (bokningWindow != null && bokningWindow.Visibility == Visibility.Visible)
+            {
+                bokningWindow.UpdateBokningar();
             }
         }
 
@@ -191,6 +197,38 @@ namespace Mortfors
             }
         }
 
+        private void b_kormarkerad_Click(object sender, RoutedEventArgs e)
+        {
+            if (lv_bussresor.SelectedItem != null)
+            {
+                if (DBConnection.SetBussresaChaffor((BussresaObject)lv_bussresor.SelectedItem, ((AnstalldObject)Authenticator.currentUser).personNummer) > 0)
+                {
+                    UpdateAllChain();
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void b_avanmalkorningavmarkerad_Click(object sender, RoutedEventArgs e)
+        {
+            if (lv_bussresor.SelectedItem != null)
+            {
+                if (DBConnection.RemoveBussresaChaffor((BussresaObject)lv_bussresor.SelectedItem, ((AnstalldObject)Authenticator.currentUser).personNummer) > 0)
+                {
+                    UpdateAllChain();
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
 
         private void b_hanterahallplatser_Click(object sender, RoutedEventArgs e)
         {
@@ -208,7 +246,9 @@ namespace Mortfors
 
         private void b_hanterabokningar_Click(object sender, RoutedEventArgs e)
         {
-
+            bokningWindow = new HanteraBokningWindow(this);
+            bokningWindow.Show();
+            b_hanterabokningar.IsEnabled = false;
         }
 
         private void b_hanteraanstallda_Click(object sender, RoutedEventArgs e)

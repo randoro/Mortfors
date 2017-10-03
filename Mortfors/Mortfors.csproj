@@ -111,6 +111,18 @@
     <Compile Include="Anstalld\Anstallda\HanteraAnstalldWindow.xaml.cs">
       <DependentUpon>HanteraAnstalldWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Anstalld\Bokningar\AndraBokningWindow.xaml.cs">
+      <DependentUpon>AndraBokningWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Anstalld\Bokningar\HanteraBokningWindow.xaml.cs">
+      <DependentUpon>HanteraBokningWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Anstalld\Bokningar\ValjBussresaWindow.xaml.cs">
+      <DependentUpon>ValjBussresaWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Anstalld\Bokningar\ValjResenarWindow.xaml.cs">
+      <DependentUpon>ValjResenarWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Anstalld\Hallplatser\AndraHallplatsWindow.xaml.cs">
       <DependentUpon>AndraHallplatsWindow.xaml</DependentUpon>
     </Compile>
@@ -126,15 +138,29 @@
     <Compile Include="Anstalld\ValjHallplatsWindow.xaml.cs">
       <DependentUpon>ValjHallplatsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RegistreraResenarWindow.xaml.cs">
+      <DependentUpon>RegistreraResenarWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Resenar\AndraMinaUppgifterWindow.xaml.cs">
+      <DependentUpon>AndraMinaUppgifterWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Resenar\AndraResenarBokningWindow.xaml.cs">
+      <DependentUpon>AndraResenarBokningWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Resenar\HanteraMinaBokningarWindow.xaml.cs">
+      <DependentUpon>HanteraMinaBokningarWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SQLObject\AnstalldObject.cs" />
     <Compile Include="Anstalld\AnstalldWindow.xaml.cs">
       <DependentUpon>AnstalldWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SQLObject\BokningObject.cs" />
     <Compile Include="SQLObject\BussresaObject.cs" />
     <Compile Include="Anstalld\Hallplatser\HanteraHallplatsWindow.xaml.cs">
       <DependentUpon>HanteraHallplatsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SQLObject\HallplatsObject.cs" />
+    <Compile Include="SQLObject\MinBokningObject.cs" />
     <Compile Include="SQLObject\ResenarObject.cs" />
     <Compile Include="Resenar\ResenarWindow.xaml.cs">
       <DependentUpon>ResenarWindow.xaml</DependentUpon>
@@ -150,6 +176,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Anstalld\Anstallda\HanteraAnstalldWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Anstalld\Bokningar\AndraBokningWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Anstalld\Bokningar\HanteraBokningWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Anstalld\Bokningar\ValjBussresaWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Anstalld\Bokningar\ValjResenarWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -195,6 +237,22 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="RegistreraResenarWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resenar\AndraMinaUppgifterWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resenar\AndraResenarBokningWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resenar\HanteraMinaBokningarWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resenar\ResenarWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -228,9 +286,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Anstalld\Bokningar\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
       <Visible>False</Visible>

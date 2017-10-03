@@ -27,7 +27,7 @@ namespace Mortfors.Anstalld.Anstallda
         List<AnstalldObject> anstalldObject;
 
 
-        const int limit = 2;
+        const int limit = 10;
         public int offset = 0;
         public int count = 0;
 

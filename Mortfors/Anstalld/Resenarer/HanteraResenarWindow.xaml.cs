@@ -27,7 +27,7 @@ namespace Mortfors.Anstalld.Resenarer
         List<ResenarObject> resenarObject;
 
 
-        const int limit = 2;
+        const int limit = 10;
         public int offset = 0;
         public int count = 0;
 
