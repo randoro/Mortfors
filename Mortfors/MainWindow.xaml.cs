@@ -16,7 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Mortfors.SQLObject;
 using Mortfors.Login;
-using Mortfors.Resenar;
+using Mortfors.Traveller;
 
 namespace Mortfors
 {
@@ -25,7 +25,7 @@ namespace Mortfors
     /// </summary>
     public partial class MainWindow : Window
     {
-        RegistreraResenarWindow registreraResenarWindow;
+        RegisterTravellerWindow registerTravellerWindow;
         DispatcherTimer dispatcherTimer = new DispatcherTimer();
 
         public MainWindow()
@@ -47,11 +47,11 @@ namespace Mortfors
             
         }
 
-        private void b_registrera_Click(object sender, RoutedEventArgs e)
+        private void b_register_Click(object sender, RoutedEventArgs e)
         {
-            b_registrera.IsEnabled = false;
-            registreraResenarWindow = new RegistreraResenarWindow(this);
-            registreraResenarWindow.ShowDialog();
+            b_register.IsEnabled = false;
+            registerTravellerWindow = new RegisterTravellerWindow(this);
+            registerTravellerWindow.ShowDialog();
         }
 
 
@@ -66,16 +66,16 @@ namespace Mortfors
             l_errormessage.Content = "";
             if (Authenticator.Login(username, password))
             {
-                if (Authenticator.currentUser.GetType() == typeof(ResenarObject))
+                if (Authenticator.currentUser.GetType() == typeof(TravellerObject))
                 {
-                    ResenarWindow resenarWindow = new ResenarWindow();
-                    resenarWindow.Show();
+                    TravellerWindow travellerWindow = new TravellerWindow();
+                    travellerWindow.Show();
                     this.Close();
                 }
-                else if (Authenticator.currentUser.GetType() == typeof(AnstalldObject))
+                else if (Authenticator.currentUser.GetType() == typeof(EmployeeObject))
                 {
-                    AnstalldWindow anstalldWindow = new AnstalldWindow();
-                    anstalldWindow.Show();
+                    EmployeeWindow employeeWindow = new EmployeeWindow();
+                    employeeWindow.Show();
                     this.Close();
                 }
             }

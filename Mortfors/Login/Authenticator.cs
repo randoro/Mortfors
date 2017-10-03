@@ -29,26 +29,26 @@ namespace Mortfors.Login
 
             if (IsValidEmail(username))
             {
-                //resenar login
+                //traveller login
                 currentUser = null;
-                currentUser = DBConnection.VerifyResenar(username, hashedPassword);
+                currentUser = DBConnection.VerifyTraveller(username, hashedPassword);
                 if (currentUser != null)
                 {
                     authenticated = true;
-                    Console.WriteLine("Resenar " + username + " is now authenticated!");
+                    Console.WriteLine("Traveller " + username + " is now authenticated!");
 
                     return true;
                 }
             }
             else
             {
-                //anstalld login
+                //employee login
                 currentUser = null;
-                currentUser = DBConnection.VerifyAnstalld(username, hashedPassword);
+                currentUser = DBConnection.VerifyEmployee(username, hashedPassword);
                 if(currentUser != null)
                 {
                     authenticated = true;
-                    Console.WriteLine("Anstalld " + username + " is now authenticated!");
+                    Console.WriteLine("Employee " + username + " is now authenticated!");
 
 
 
@@ -77,18 +77,18 @@ namespace Mortfors.Login
         public static string GetUserInfo()
         {
             string info = "";
-            if(currentUser.GetType() == typeof(ResenarObject))
+            if(currentUser.GetType() == typeof(TravellerObject))
             {
-                info += "Resenär "+ currentUser.namn+ " inloggad med email "+((ResenarObject)currentUser).email;
-            } else if (currentUser.GetType() == typeof(AnstalldObject))
+                info += "Traveller "+ currentUser.name+ " logged in with email "+((TravellerObject)currentUser).email;
+            } else if (currentUser.GetType() == typeof(EmployeeObject))
             {
-                info += "Anställd ";
-                if(((AnstalldObject)currentUser).isAdmin)
+                info += "Employee ";
+                if(((EmployeeObject)currentUser).isAdmin)
                 {
                     info += "Admin ";
                 }
 
-                info += currentUser.namn+ " inloggad med personnummer "+((AnstalldObject)currentUser).personNummer;
+                info += currentUser.name+ " logged in with social security number " + ((EmployeeObject)currentUser).personNummer;
             }
             return info;
         }

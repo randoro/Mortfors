@@ -10,14 +10,14 @@
         <Label x:Name="l_errormessage" Content="" HorizontalAlignment="Left" Margin="136,142,0,0" VerticalAlignment="Top" Foreground="#FFD10000" FontStyle="Italic" Width="350"/>
         <Grid HorizontalAlignment="Left" Height="132" Margin="10,10,0,0" VerticalAlignment="Top" Width="320">
             <TextBox x:Name="tb_username" HorizontalAlignment="Left" Height="24" Margin="10,30,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="300"/>
-            <Label x:Name="l_username" Content="Email eller Personnummer" HorizontalAlignment="Left" Margin="5,10,0,0" VerticalAlignment="Top" Width="156" FontStyle="Italic" Foreground="#FF919191"/>
-            <Label x:Name="l_password" Content="L&#x00F6;senord" HorizontalAlignment="Left" Margin="5,54,0,0" VerticalAlignment="Top" Width="91" Foreground="#FF919191" FontStyle="Italic"/>
+            <Label x:Name="l_username" Content="Email or Social Security Number" HorizontalAlignment="Left" Margin="5,10,0,0" VerticalAlignment="Top" Width="188" FontStyle="Italic" Foreground="#FF919191"/>
+            <Label x:Name="l_password" Content="Password" HorizontalAlignment="Left" Margin="5,54,0,0" VerticalAlignment="Top" Width="91" Foreground="#FF919191" FontStyle="Italic"/>
             <PasswordBox x:Name="pb_password" HorizontalAlignment="Left" Height="24" Margin="10,74,0,0" VerticalAlignment="Top" Width="300"/>
-            <Button x:Name="b_login" Content="Logga in" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" Width="75" Click="b_login_Click"/>
-            <Button x:Name="b_registrera" Content="Registrera" HorizontalAlignment="Left" Margin="90,103,0,0" VerticalAlignment="Top" Width="83" Click="b_registrera_Click"/>
+            <Button x:Name="b_login" Content="Log in" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" Width="75" Click="b_login_Click"/>
+            <Button x:Name="b_register" Content="Register" HorizontalAlignment="Left" Margin="90,103,0,0" VerticalAlignment="Top" Width="83" Click="b_register_Click"/>
         </Grid>
-        <Button x:Name="b_cheat1" Content="Temporary Cheat Button(Login as Anstalld Admin)" HorizontalAlignment="Left" Margin="248,289,0,0" VerticalAlignment="Top" Width="284" Click="b_cheat1_Click"/>
-        <Button x:Name="b_cheat2" Content="Temporary Cheat Button(Login as Anstalld Chafför)" HorizontalAlignment="Left" Margin="248,264,0,0" VerticalAlignment="Top" Width="284" Click="b_cheat2_Click"/>
-        <Button x:Name="b_cheat3" Content="Temporary Cheat Button(Login as Resenär)" HorizontalAlignment="Left" Margin="248,239,0,0" VerticalAlignment="Top" Width="284" Click="b_cheat3_Click"/>
+        <Button x:Name="b_cheat1" Content="Temporary Cheat Button(Login as Employee Admin)" HorizontalAlignment="Left" Margin="248,289,0,0" VerticalAlignment="Top" Width="284" Click="b_cheat1_Click"/>
+        <Button x:Name="b_cheat2" Content="Temporary Cheat Button(Login as Employee Driver)" HorizontalAlignment="Left" Margin="248,264,0,0" VerticalAlignment="Top" Width="284" Click="b_cheat2_Click"/>
+        <Button x:Name="b_cheat3" Content="Temporary Cheat Button(Login as Traveller)" HorizontalAlignment="Left" Margin="248,239,0,0" VerticalAlignment="Top" Width="284" Click="b_cheat3_Click"/>
     </Grid>
 </Window>

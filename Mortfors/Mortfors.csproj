@@ -102,124 +102,124 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Anstalld\AndraBussresaWindow.xaml.cs">
-      <DependentUpon>AndraBussresaWindow.xaml</DependentUpon>
+    <Compile Include="Employee\ChangeBusrideWindow.xaml.cs">
+      <DependentUpon>ChangeBusrideWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Anstalld\Anstallda\AndraAnstalldWindow.xaml.cs">
-      <DependentUpon>AndraAnstalldWindow.xaml</DependentUpon>
+    <Compile Include="Employee\Employees\ChangeEmployeeWindow.xaml.cs">
+      <DependentUpon>ChangeEmployeeWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Anstalld\Anstallda\HanteraAnstalldWindow.xaml.cs">
-      <DependentUpon>HanteraAnstalldWindow.xaml</DependentUpon>
+    <Compile Include="Employee\Employees\HandleEmployeesWindow.xaml.cs">
+      <DependentUpon>HandleEmployeesWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Anstalld\Bokningar\AndraBokningWindow.xaml.cs">
-      <DependentUpon>AndraBokningWindow.xaml</DependentUpon>
+    <Compile Include="Employee\Bookings\ChangeBookingWindow.xaml.cs">
+      <DependentUpon>ChangeBookingWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Anstalld\Bokningar\HanteraBokningWindow.xaml.cs">
-      <DependentUpon>HanteraBokningWindow.xaml</DependentUpon>
+    <Compile Include="Employee\Bookings\HandleBookingsWindow.xaml.cs">
+      <DependentUpon>HandleBookingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Anstalld\Bokningar\ValjBussresaWindow.xaml.cs">
-      <DependentUpon>ValjBussresaWindow.xaml</DependentUpon>
+    <Compile Include="Employee\Bookings\ChooseBusrideWindow.xaml.cs">
+      <DependentUpon>ChooseBusrideWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Anstalld\Bokningar\ValjResenarWindow.xaml.cs">
-      <DependentUpon>ValjResenarWindow.xaml</DependentUpon>
+    <Compile Include="Employee\Bookings\ChooseResenarWindow.xaml.cs">
+      <DependentUpon>ChooseResenarWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Anstalld\Hallplatser\AndraHallplatsWindow.xaml.cs">
-      <DependentUpon>AndraHallplatsWindow.xaml</DependentUpon>
+    <Compile Include="Employee\Stations\ChangeStationWindow.xaml.cs">
+      <DependentUpon>ChangeStationWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Anstalld\Resenarer\AndraResenarWindow.xaml.cs">
-      <DependentUpon>AndraResenarWindow.xaml</DependentUpon>
+    <Compile Include="Employee\Travellers\ChangeTravellerWindow.xaml.cs">
+      <DependentUpon>ChangeTravellerWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Anstalld\Resenarer\HanteraResenarWindow.xaml.cs">
-      <DependentUpon>HanteraResenarWindow.xaml</DependentUpon>
+    <Compile Include="Employee\Travellers\HandleTravellersWindow.xaml.cs">
+      <DependentUpon>HandleTravellersWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Anstalld\ValjAnstalldWindow.xaml.cs">
-      <DependentUpon>ValjAnstalldWindow.xaml</DependentUpon>
+    <Compile Include="Employee\ChooseEmployeeWindow.xaml.cs">
+      <DependentUpon>ChooseEmployeeWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Anstalld\ValjHallplatsWindow.xaml.cs">
-      <DependentUpon>ValjHallplatsWindow.xaml</DependentUpon>
+    <Compile Include="Employee\ChooseStationWindow.xaml.cs">
+      <DependentUpon>ChooseStationWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RegistreraResenarWindow.xaml.cs">
-      <DependentUpon>RegistreraResenarWindow.xaml</DependentUpon>
+    <Compile Include="RegisterResenarWindow.xaml.cs">
+      <DependentUpon>RegisterResenarWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Resenar\AndraMinaUppgifterWindow.xaml.cs">
-      <DependentUpon>AndraMinaUppgifterWindow.xaml</DependentUpon>
+    <Compile Include="Resenar\ChangeMyInformationWindow.xaml.cs">
+      <DependentUpon>ChangeMyInformationWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Resenar\AndraResenarBokningWindow.xaml.cs">
-      <DependentUpon>AndraResenarBokningWindow.xaml</DependentUpon>
+    <Compile Include="Resenar\ChangeTravellerBookingWindow.xaml.cs">
+      <DependentUpon>ChangeTravellerBookingWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Resenar\HanteraMinaBokningarWindow.xaml.cs">
-      <DependentUpon>HanteraMinaBokningarWindow.xaml</DependentUpon>
+    <Compile Include="Resenar\HandleMyBookingsWindow.xaml.cs">
+      <DependentUpon>HandleMyBookingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SQLObject\AnstalldObject.cs" />
-    <Compile Include="Anstalld\AnstalldWindow.xaml.cs">
-      <DependentUpon>AnstalldWindow.xaml</DependentUpon>
+    <Compile Include="SQLObject\EmployeeObject.cs" />
+    <Compile Include="Employee\EmployeeWindow.xaml.cs">
+      <DependentUpon>EmployeeWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SQLObject\BokningObject.cs" />
-    <Compile Include="SQLObject\BussresaObject.cs" />
-    <Compile Include="Anstalld\Hallplatser\HanteraHallplatsWindow.xaml.cs">
-      <DependentUpon>HanteraHallplatsWindow.xaml</DependentUpon>
+    <Compile Include="SQLObject\BookingObject.cs" />
+    <Compile Include="SQLObject\BusrideObject.cs" />
+    <Compile Include="Employee\Stations\HanteraStationsWindow.xaml.cs">
+      <DependentUpon>HanteraStationsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SQLObject\HallplatsObject.cs" />
-    <Compile Include="SQLObject\MinBokningObject.cs" />
-    <Compile Include="SQLObject\ResenarObject.cs" />
-    <Compile Include="Resenar\ResenarWindow.xaml.cs">
-      <DependentUpon>ResenarWindow.xaml</DependentUpon>
+    <Compile Include="SQLObject\StationObject.cs" />
+    <Compile Include="SQLObject\MyBookingObject.cs" />
+    <Compile Include="SQLObject\TravellerObject.cs" />
+    <Compile Include="Resenar\TravellerWindow.xaml.cs">
+      <DependentUpon>TravellerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Login\SimpleHash.cs" />
     <Compile Include="SQLObject\UserObject.cs" />
-    <Page Include="Anstalld\AndraBussresaWindow.xaml">
+    <Page Include="Employee\ChangeBusrideWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Anstalld\Anstallda\AndraAnstalldWindow.xaml">
+    <Page Include="Employee\Employees\ChangeEmployeeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Anstalld\Anstallda\HanteraAnstalldWindow.xaml">
+    <Page Include="Employee\Employees\HandleEmployeesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Anstalld\Bokningar\AndraBokningWindow.xaml">
+    <Page Include="Employee\Bookings\ChangeBookingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Anstalld\Bokningar\HanteraBokningWindow.xaml">
+    <Page Include="Employee\Bookings\HandleBookingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Anstalld\Bokningar\ValjBussresaWindow.xaml">
+    <Page Include="Employee\Bookings\ChooseBusrideWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Anstalld\Bokningar\ValjResenarWindow.xaml">
+    <Page Include="Employee\Bookings\ChooseResenarWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Anstalld\Hallplatser\AndraHallplatsWindow.xaml">
+    <Page Include="Employee\Stations\ChangeStationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Anstalld\AnstalldWindow.xaml">
+    <Page Include="Employee\EmployeeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Anstalld\Hallplatser\HanteraHallplatsWindow.xaml">
+    <Page Include="Employee\Stations\HanteraStationsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Anstalld\Resenarer\AndraResenarWindow.xaml">
+    <Page Include="Employee\Travellers\ChangeTravellerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Anstalld\Resenarer\HanteraResenarWindow.xaml">
+    <Page Include="Employee\Travellers\HandleTravellersWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Anstalld\ValjAnstalldWindow.xaml">
+    <Page Include="Employee\ChooseEmployeeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Anstalld\ValjHallplatsWindow.xaml">
+    <Page Include="Employee\ChooseStationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -237,23 +237,23 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="RegistreraResenarWindow.xaml">
+    <Page Include="RegisterResenarWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resenar\AndraMinaUppgifterWindow.xaml">
+    <Page Include="Resenar\ChangeMyInformationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resenar\AndraResenarBokningWindow.xaml">
+    <Page Include="Resenar\ChangeTravellerBookingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resenar\HanteraMinaBokningarWindow.xaml">
+    <Page Include="Resenar\HandleMyBookingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resenar\ResenarWindow.xaml">
+    <Page Include="Resenar\TravellerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

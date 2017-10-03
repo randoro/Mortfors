@@ -1,0 +1,30 @@
+<Window x:Class="Mortfors.Employee.ChooseStationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mortfors.Employee"
+        mc:Ignorable="d"
+        Closing="ChooseStationWindow_Closing"
+        Title="ChooseStationWindow" Height="368.182" Width="598.896">
+    <Grid>
+        <Grid HorizontalAlignment="Left" Height="327" Margin="10,10,0,0" VerticalAlignment="Top" Width="581">
+            <Label x:Name="l_titel" Content="Choose Station" HorizontalAlignment="Left" VerticalAlignment="Top" Width="261"/>
+            <Label x:Name="l_visar" Content="Showing 0 - 10 av 545" HorizontalAlignment="Left" Margin="99,-6,0,0" VerticalAlignment="Top" Width="203" HorizontalContentAlignment="Right"/>
+            <Button x:Name="b_nasta" Content="Next 10 -&gt;" HorizontalAlignment="Left" Margin="391,1,0,0" VerticalAlignment="Top" Width="85" Click="b_nasta_Click"/>
+            <Button x:Name="b_forra" Content="&lt;- Prev 10" HorizontalAlignment="Left" Margin="302,0,0,0" VerticalAlignment="Top" Width="84" Click="b_forra_Click"/>
+            <Button x:Name="b_uppdatera" Content="Refresh" HorizontalAlignment="Left" Margin="481,0,0,0" VerticalAlignment="Top" Width="83" Click="b_uppdatera_Click"/>
+            <ListView x:Name="lv_lista" SelectionMode="Single" HorizontalAlignment="Left" Height="264" VerticalAlignment="Top" Width="568" Margin="0,26,0,0">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Street Address" Width="280" DisplayMemberBinding="{Binding street_address}" />
+                        <GridViewColumn Header="City" Width="140" DisplayMemberBinding="{Binding city}" />
+                        <GridViewColumn Header="Country" Width="130" DisplayMemberBinding="{Binding country}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Button x:Name="b_cancel" Content="Cancel" HorizontalAlignment="Left" Margin="0,295,0,0" VerticalAlignment="Top" Width="75" Click="b_cancel_Click"/>
+            <Button x:Name="b_choose" Content="Choose" HorizontalAlignment="Left" Margin="506,295,0,0" VerticalAlignment="Top" Width="62" Click="b_choose_Click"/>
+        </Grid>
+    </Grid>
+</Window>

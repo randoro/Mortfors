@@ -9,16 +9,16 @@ namespace Mortfors.SQLObject
     public abstract class UserObject
     {
         public string hashedPassword { get; set; }
-        public string namn { get; set; }
-        public string adress { get; set; }
-        public string telefon { get; set; }
+        public string name { get; set; }
+        public string address { get; set; }
+        public string phone { get; set; }
 
-        public UserObject(string _hashedPassword, string _namn, string _adress, string _telefon)
+        public UserObject(string _hashedPassword, string _name, string _address, string _phone)
         {
             hashedPassword = _hashedPassword;
-            namn = _namn;
-            adress = _adress;
-            telefon = _telefon;
+            name = _name;
+            address = _address;
+            phone = _phone;
     }
     }
 }

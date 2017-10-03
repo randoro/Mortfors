@@ -1,0 +1,37 @@
+<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mortfors.Employee"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="Mortfors.Employee.ChangeBusrideWindow"
+        mc:Ignorable="d"
+        Closing="ChangeBusrideWindow_Closing"
+        Title="ChangeBusrideWindow" Height="334.058" Width="610.801">
+    <Grid>
+        <Label x:Name="l_busride_id" Content="Busride ID:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb_busride_id" HorizontalAlignment="Left" Height="23" Margin="175,13,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="334" PreviewTextInput="NumberValidationTextBox"/>
+        <Label x:Name="l_departure" Content="Departure Station:" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb_departure" HorizontalAlignment="Left" Height="23" Margin="175,41,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="334" IsEnabled="False"/>
+        <Button x:Name="b_change_departure" Content="Change" HorizontalAlignment="Left" Margin="514,41,0,0" VerticalAlignment="Top" Width="75" Click="b_change_departure_Click" Height="23"/>
+        <Label x:Name="l_departuredate" Content="Departure Date/Time:" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top"/>
+        <xctk:DateTimePicker x:Name="dtp_departuredate" Format="Custom" FormatString="dd-MMM-yyyy HH:mm:ss" HorizontalAlignment="Left" Margin="175,69,0,0" VerticalAlignment="Top" Width="334" Height="23"/>
+        <Label x:Name="l_arrival" Content="Arrival Station:" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb_arrival" HorizontalAlignment="Left" Height="23" Margin="175,97,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="334" IsEnabled="False"/>
+        <Button x:Name="b_change_arrival" Content="Change" HorizontalAlignment="Left" Margin="514,97,0,0" VerticalAlignment="Top" Width="75" Click="b_change_arrival_Click" Height="23"/>
+        <Label x:Name="l_arrivaldate" Content="Arrival Date/Time:" HorizontalAlignment="Left" Margin="10,122,0,0" VerticalAlignment="Top"/>
+        <xctk:DateTimePicker x:Name="dtp_arrivaldate" Format="Custom" FormatString="dd-MMM-yyyy HH:mm:ss" HorizontalAlignment="Left" Margin="175,125,0,0" VerticalAlignment="Top" Width="334" Height="23"/>
+        <Label x:Name="l_cost" Content="Cost:" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb_cost" HorizontalAlignment="Left" Height="23" Margin="175,153,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="334" PreviewTextInput="NumberValidationTextBox"/>
+        <Label x:Name="l_max_seats" Content="Max Seats:" HorizontalAlignment="Left" Margin="10,178,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb_max_seats" HorizontalAlignment="Left" Height="23" Margin="175,181,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="334" PreviewTextInput="NumberValidationTextBox"/>
+        <Label x:Name="l_driver_id" Content="Driver ID (Can be empty):" HorizontalAlignment="Left" Margin="10,206,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb_driver_id" HorizontalAlignment="Left" Height="23" Margin="175,209,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="334" IsEnabled="False"/>
+        <Button x:Name="b_change_driver_id" Content="Change" HorizontalAlignment="Left" Margin="514,209,0,0" VerticalAlignment="Top" Width="75" Click="b_change_driver_id_Click" Height="23"/>
+        <Button x:Name="b_cancel" Content="Cancel" HorizontalAlignment="Left" Margin="10,266,0,0" VerticalAlignment="Top" Width="75" Click="b_cancel_Click" Height="23"/>
+        <Button x:Name="b_save" Content="Save" HorizontalAlignment="Left" Margin="514,266,0,0" VerticalAlignment="Top" Width="75" Click="b_save_Click" Height="23"/>
+
+
+
+    </Grid>
+</Window>

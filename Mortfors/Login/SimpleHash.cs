@@ -42,7 +42,7 @@ public class SimpleHash
     /// </param>
     /// <param name="hashAlgorithm">
     /// Name of the hash algorithm. Allowed values are: "MD5", "SHA1",
-    /// "SHA256", "SHA384", and "SHA512" (if any other value is specified
+    /// "SHA256", "SHA384", and "SHA512" (if anew other value is specified
     /// MD5 hashing algorithm will be used). This value is case-insensitive.
     /// </param>
     /// <param name="saltBytes">
@@ -158,7 +158,7 @@ public class SimpleHash
     /// </param>
     /// <param name="hashAlgorithm">
     /// Name of the hash algorithm. Allowed values are: "MD5", "SHA1", 
-    /// "SHA256", "SHA384", and "SHA512" (if any other value is specified,
+    /// "SHA256", "SHA384", and "SHA512" (if anew other value is specified,
     /// MD5 hashing algorithm will be used). This value is case-insensitive.
     /// </param>
     /// <param name="hashValue">

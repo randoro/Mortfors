@@ -1,0 +1,23 @@
+<Window x:Class="Mortfors.Employee.Bookings.ChangeBookingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mortfors.Employee.Bookings"
+        mc:Ignorable="d"
+        Closing="ChangeBookingWindow_Closing"
+        Title="ChangeBookingWindow" Height="187.025" Width="412.1">
+    <Grid>
+        <Label x:Name="l_busride_id" Content="Busride ID:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb_busride_id" HorizontalAlignment="Left" Height="23" Margin="93,13,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="217" IsEnabled="False" PreviewTextInput="NumberValidationTextBox"/>
+        <Button x:Name="b_change_busride_id" Content="Change" HorizontalAlignment="Left" Margin="315,13,0,0" VerticalAlignment="Top" Width="75" Click="b_change_busride_id_Click" Height="23"/>
+        <Label x:Name="l_traveller" Content="Traveller:" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb_traveller" HorizontalAlignment="Left" Height="23" Margin="93,41,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="217" IsEnabled="False"/>
+        <Button x:Name="b_change_traveller" Content="Change" HorizontalAlignment="Left" Margin="315,41,0,0" VerticalAlignment="Top" Width="75" Click="b_change_traveller_Click" Height="23"/>
+        <Label x:Name="l_seats" Content="Seats:" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="tb_seats" HorizontalAlignment="Left" Height="23" Margin="93,69,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="217" PreviewTextInput="NumberValidationTextBox"/>
+        <Button x:Name="b_cancel" Content="Cancel" HorizontalAlignment="Left" Margin="14,126,0,0" VerticalAlignment="Top" Width="75" Click="b_cancel_Click"/>
+        <Button x:Name="b_save" Content="Save" HorizontalAlignment="Left" Margin="315,126,0,0" VerticalAlignment="Top" Width="75" Click="b_save_Click"/>
+
+    </Grid>
+</Window>

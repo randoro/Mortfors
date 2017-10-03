@@ -131,7 +131,7 @@ namespace Mortfors.Login
                 switch (e.SqlState)
                 {
                     case "23503":
-                        ErrorMessage = "Främmande nyckel fel.";
+                        ErrorMessage = "Foreign key error!.";
                         break;
                     default:
                         break;
@@ -178,27 +178,27 @@ namespace Mortfors.Login
 
         #region login
 
-        public static AnstalldObject VerifyAnstalld(string username, string hashedPassword)
+        public static EmployeeObject VerifyEmployee(string username, string hashedPassword)
         {
             ErrorMessage = "Wrong username or password.";
-            AnstalldObject returnObj = null;
+            EmployeeObject returnObj = null;
 
             NpgsqlConnection conn = null;
             NpgsqlDataReader dr = null;
 
             try
             {
-                conn = OpenConnectionAndGetReader("SELECT * from anstalld WHERE pers_nr = :p0 AND losenord = :p1;", out dr, username, hashedPassword);
+                conn = OpenConnectionAndGetReader("SELECT * from employee WHERE social_security_nr = :p0 AND password = :p1;", out dr, username, hashedPassword);
                 if (dr.Read())
                 {
-                    string personNummer = dr.GetFieldValue<string>(dr.GetOrdinal("pers_nr"));
-                    string _hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("losenord"));
+                    string personNummer = dr.GetFieldValue<string>(dr.GetOrdinal("social_security_nr"));
+                    string _hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("password"));
                     bool isAdmin = ((dr.GetFieldValue<Int32>(dr.GetOrdinal("admin")) == 0) ? false : true);
-                    string namn = dr.GetFieldValue<string>(dr.GetOrdinal("namn"));
-                    string adress = dr.GetFieldValue<string>(dr.GetOrdinal("adress"));
-                    string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("hem_telefon"));
+                    string name = dr.GetFieldValue<string>(dr.GetOrdinal("name"));
+                    string address = dr.GetFieldValue<string>(dr.GetOrdinal("address"));
+                    string phone = dr.GetFieldValue<string>(dr.GetOrdinal("home_phone"));
 
-                    returnObj = new AnstalldObject(personNummer, _hashedPassword, isAdmin, namn, adress, telefon);
+                    returnObj = new EmployeeObject(personNummer, _hashedPassword, isAdmin, name, address, phone);
                     ErrorMessage = "";
                 }
 
@@ -210,26 +210,26 @@ namespace Mortfors.Login
             return returnObj;
         }
 
-        public static ResenarObject VerifyResenar(string username, string hashedPassword)
+        public static TravellerObject VerifyTraveller(string username, string hashedPassword)
         {
             ErrorMessage = "Wrong username or password.";
-            ResenarObject returnObj = null;
+            TravellerObject returnObj = null;
 
             NpgsqlConnection conn = null;
             NpgsqlDataReader dr = null;
 
             try
             {
-                conn = OpenConnectionAndGetReader("SELECT * from resenar WHERE email = :p0 AND losenord = :p1;", out dr, username, hashedPassword);
+                conn = OpenConnectionAndGetReader("SELECT * from traveller WHERE email = :p0 AND password = :p1;", out dr, username, hashedPassword);
                 if (dr.Read())
                 {
                     string email = dr.GetFieldValue<string>(dr.GetOrdinal("email"));
-                    string _hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("losenord"));
-                    string namn = dr.GetFieldValue<string>(dr.GetOrdinal("namn"));
-                    string adress = dr.GetFieldValue<string>(dr.GetOrdinal("adress"));
-                    string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("telefon"));
+                    string _hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("password"));
+                    string name = dr.GetFieldValue<string>(dr.GetOrdinal("name"));
+                    string address = dr.GetFieldValue<string>(dr.GetOrdinal("address"));
+                    string phone = dr.GetFieldValue<string>(dr.GetOrdinal("phone"));
 
-                    returnObj = new ResenarObject(email, _hashedPassword, namn, adress, telefon);
+                    returnObj = new TravellerObject(email, _hashedPassword, name, address, phone);
                     ErrorMessage = "";
                 }
 
@@ -244,32 +244,32 @@ namespace Mortfors.Login
 
         #endregion login
 
-        #region bokning
+        #region booking
 
-        public static int CountBokningar()
+        public static int CountBookings()
         {
             int count = 0;
-            count = ExecuteAndGetScalar("SELECT count(*) from bokning;");
+            count = ExecuteAndGetScalar("SELECT count(*) from booking;");
             return count;
         }
 
-        public static List<BokningObject> SelectBokningar(int limit, int offset)
+        public static List<BookingObject> SelectBookings(int limit, int offset)
         {
-            List<BokningObject> returnObj = new List<BokningObject>();
+            List<BookingObject> returnObj = new List<BookingObject>();
 
             NpgsqlConnection conn = null;
             NpgsqlDataReader dr = null;
 
             try
             {
-                conn = OpenConnectionAndGetReader("SELECT * from bokning order by bussresa_id, lower(resenar) limit :p0 offset :p1;", out dr, limit, offset);
+                conn = OpenConnectionAndGetReader("SELECT * from booking order by busride_id, lower(traveller) limit :p0 offset :p1;", out dr, limit, offset);
                 while (dr.Read())
                 {
-                    int bussresa_id = dr.GetFieldValue<int>(dr.GetOrdinal("bussresa_id"));
-                    string resenar = dr.GetFieldValue<string>(dr.GetOrdinal("resenar"));
-                    int antal_platser = dr.GetFieldValue<int>(dr.GetOrdinal("antal_platser"));
+                    int busride_id = dr.GetFieldValue<int>(dr.GetOrdinal("busride_id"));
+                    string traveller = dr.GetFieldValue<string>(dr.GetOrdinal("traveller"));
+                    int seats = dr.GetFieldValue<int>(dr.GetOrdinal("seats"));
 
-                    returnObj.Add(new BokningObject(bussresa_id, resenar, antal_platser));
+                    returnObj.Add(new BookingObject(busride_id, traveller, seats));
                 }
 
             }
@@ -280,46 +280,46 @@ namespace Mortfors.Login
             return returnObj;
         }
 
-        public static int InsertBokning(BokningObject newObject)
+        public static int InsertBooking(BookingObject newObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO bokning (bussresa_id, resenar, antal_platser) values (:p0, :p1, :p2);", newObject.bussresa_id, newObject.resenar, newObject.antal_platser);
+            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO booking (busride_id, traveller, seats) values (:p0, :p1, :p2);", newObject.busride_id, newObject.traveller, newObject.seats);
             return affectedRows;
 
 
         }
 
-        public static int UpdateBokning(BokningObject newObject, BokningObject oldObject)
+        public static int UpdateBooking(BookingObject newObject, BookingObject oldObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("UPDATE bokning SET bussresa_id = :p0, resenar = :p1, antal_platser = :p2 WHERE bussresa_id = :p3 AND resenar = :p4;", newObject.bussresa_id, newObject.resenar, newObject.antal_platser, oldObject.bussresa_id, oldObject.resenar);
+            int affectedRows = ExecuteAndGetNonQuery("UPDATE booking SET busride_id = :p0, traveller = :p1, seats = :p2 WHERE busride_id = :p3 AND traveller = :p4;", newObject.busride_id, newObject.traveller, newObject.seats, oldObject.busride_id, oldObject.traveller);
             return affectedRows;
         }
 
-        public static int DeleteBokning(BokningObject oldObject)
+        public static int DeleteBooking(BookingObject oldObject)
         {
             
             int affectedRows = -1;
 
-            MessageBoxResult result = MessageBox.Show("Vill du ta bort den här bokningen?", "Varning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            MessageBoxResult result = MessageBox.Show("Do you wish to remove this booking?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Yes)
             {
-                affectedRows = ExecuteAndGetNonQuery("DELETE FROM bokning WHERE bussresa_id = :p0 AND resenar = :p1;", oldObject.bussresa_id, oldObject.resenar);
+                affectedRows = ExecuteAndGetNonQuery("DELETE FROM booking WHERE busride_id = :p0 AND traveller = :p1;", oldObject.busride_id, oldObject.traveller);
             }
             return affectedRows;
         }
 
-        public static bool CheckIfBokningAllowed(BokningObject newObject)
+        public static bool CheckIfBookingAllowed(BookingObject newObject)
         {
-            int max_platser = ExecuteAndGetScalar("SELECT max_platser FROM bussresa WHERE bussresa_id = :p0;", newObject.bussresa_id);
+            int max_seats = ExecuteAndGetScalar("SELECT max_seats FROM busride WHERE busride_id = :p0;", newObject.busride_id);
 
-            int currently_booked = ExecuteAndGetScalar("SELECT COALESCE(sum(antal_platser),0) FROM bokning WHERE bussresa_id = :p0;", newObject.bussresa_id);
+            int currently_booked = ExecuteAndGetScalar("SELECT COALESCE(sum(seats),0) FROM booking WHERE busride_id = :p0;", newObject.busride_id);
             
-            int possibly_current_Selected = ExecuteAndGetScalar("SELECT antal_platser FROM bokning WHERE bussresa_id = :p0 AND resenar = :p1;", newObject.bussresa_id, newObject.resenar);
+            int possibly_current_Selected = ExecuteAndGetScalar("SELECT seats FROM booking WHERE busride_id = :p0 AND traveller = :p1;", newObject.busride_id, newObject.traveller);
             if(possibly_current_Selected == -1)
             {
                 possibly_current_Selected = 0;
             }
 
-            if (currently_booked - possibly_current_Selected + newObject.antal_platser <= max_platser)
+            if (currently_booked - possibly_current_Selected + newObject.seats <= max_seats)
             {
                 return true;
             }
@@ -327,14 +327,14 @@ namespace Mortfors.Login
             return false;
         }
 
-        public static bool CheckIfHasBokning(int bussresa_id, string resenar)
+        public static bool CheckIfHasBooking(int busride_id, string traveller)
         {
             NpgsqlConnection conn = null;
             NpgsqlDataReader dr = null;
 
             try
             {
-                conn = OpenConnectionAndGetReader("SELECT * FROM bokning WHERE bussresa_id = :p0 AND resenar = :p1;", out dr, bussresa_id, resenar);
+                conn = OpenConnectionAndGetReader("SELECT * FROM booking WHERE busride_id = :p0 AND traveller = :p1;", out dr, busride_id, traveller);
                 if (dr.Read())
                 {
                     return true;
@@ -349,41 +349,41 @@ namespace Mortfors.Login
             
         }
 
-        public static List<MinBokningObject> SelectBokningarJoinBussresa(string _resenar, int limit, int offset)
+        public static List<MyBookingObject> SelectBookingsJoinBusride(string _traveller, int limit, int offset)
         {
-            List<MinBokningObject> returnObj = new List<MinBokningObject>();
+            List<MyBookingObject> returnObj = new List<MyBookingObject>();
 
             NpgsqlConnection conn = null;
             NpgsqlDataReader dr = null;
 
             try
             {
-                conn = OpenConnectionAndGetReader("SELECT * FROM (bokning JOIN bussresa ON bokning.bussresa_id = bussresa.bussresa_id) WHERE resenar = :p0 order by bokning.bussresa_id, lower(resenar) limit :p1 offset :p2;", out dr, _resenar, limit, offset);
+                conn = OpenConnectionAndGetReader("SELECT * FROM (booking JOIN busride ON booking.busride_id = busride.busride_id) WHERE traveller = :p0 order by booking.busride_id, lower(traveller) limit :p1 offset :p2;", out dr, _traveller, limit, offset);
                 while (dr.Read())
                 {
-                    int bussresa_id = dr.GetFieldValue<int>(dr.GetOrdinal("bussresa_id"));
-                    string avgangs_adress = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_adress"));
-                    string avgangs_stad = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_stad"));
-                    string avgangs_land = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_land"));
-                    DateTime avgangs_datum = dr.GetFieldValue<DateTime>(dr.GetOrdinal("avgangs_datum"));
-                    string ankomst_adress = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_adress"));
-                    string ankomst_stad = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_stad"));
-                    string ankomst_land = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_land"));
-                    DateTime ankomst_datum = dr.GetFieldValue<DateTime>(dr.GetOrdinal("ankomst_datum"));
-                    int kostnad = dr.GetFieldValue<int>(dr.GetOrdinal("kostnad"));
-                    int max_platser = dr.GetFieldValue<int>(dr.GetOrdinal("max_platser"));
-                    string chaffor_id = null;
-                    if (!dr.IsDBNull(dr.GetOrdinal("chaffor_id")))
+                    int busride_id = dr.GetFieldValue<int>(dr.GetOrdinal("busride_id"));
+                    string departure_address = dr.GetFieldValue<string>(dr.GetOrdinal("departure_address"));
+                    string departure_city = dr.GetFieldValue<string>(dr.GetOrdinal("departure_city"));
+                    string departure_country = dr.GetFieldValue<string>(dr.GetOrdinal("departure_country"));
+                    DateTime departure_date = dr.GetFieldValue<DateTime>(dr.GetOrdinal("departure_date"));
+                    string arrival_address = dr.GetFieldValue<string>(dr.GetOrdinal("arrival_address"));
+                    string arrival_city = dr.GetFieldValue<string>(dr.GetOrdinal("arrival_city"));
+                    string arrival_country = dr.GetFieldValue<string>(dr.GetOrdinal("arrival_country"));
+                    DateTime arrival_date = dr.GetFieldValue<DateTime>(dr.GetOrdinal("arrival_date"));
+                    int cost = dr.GetFieldValue<int>(dr.GetOrdinal("cost"));
+                    int max_seats = dr.GetFieldValue<int>(dr.GetOrdinal("max_seats"));
+                    string driver_id = null;
+                    if (!dr.IsDBNull(dr.GetOrdinal("driver_id")))
                     {
-                        chaffor_id = dr.GetFieldValue<string>(dr.GetOrdinal("chaffor_id"));
+                        driver_id = dr.GetFieldValue<string>(dr.GetOrdinal("driver_id"));
                     }
-                    BussresaObject buss = new BussresaObject(bussresa_id, avgangs_adress, avgangs_stad, avgangs_land, avgangs_datum,
-                        ankomst_adress, ankomst_stad, ankomst_land, ankomst_datum, kostnad, max_platser, chaffor_id);
+                    BusrideObject buss = new BusrideObject(busride_id, departure_address, departure_city, departure_country, departure_date,
+                        arrival_address, arrival_city, arrival_country, arrival_date, cost, max_seats, driver_id);
 
-                    string resenar = dr.GetFieldValue<string>(dr.GetOrdinal("resenar"));
-                    int antal_platser = dr.GetFieldValue<int>(dr.GetOrdinal("antal_platser"));
+                    string traveller = dr.GetFieldValue<string>(dr.GetOrdinal("traveller"));
+                    int seats = dr.GetFieldValue<int>(dr.GetOrdinal("seats"));
 
-                    returnObj.Add(new MinBokningObject(buss, resenar, antal_platser));
+                    returnObj.Add(new MyBookingObject(buss, traveller, seats));
                 }
 
             }
@@ -394,48 +394,48 @@ namespace Mortfors.Login
             return returnObj;
         }
 
-        #endregion bokning
+        #endregion booking
 
-        #region bussresa
+        #region busride
 
-        public static int CountBussresor()
+        public static int CountBusrides()
         {
             int count = 0;
-            count = ExecuteAndGetScalar("SELECT count(*) from bussresa;");
+            count = ExecuteAndGetScalar("SELECT count(*) from busride;");
             return count;
         }
 
-        public static List<BussresaObject> SelectBussresor(int limit, int offset)
+        public static List<BusrideObject> SelectBusrides(int limit, int offset)
         {
-            List<BussresaObject> returnObj = new List<BussresaObject>();
+            List<BusrideObject> returnObj = new List<BusrideObject>();
 
             NpgsqlConnection conn = null;
             NpgsqlDataReader dr = null;
 
             try
             {
-                conn = OpenConnectionAndGetReader("SELECT * from bussresa order by bussresa_id limit :p0 offset :p1;", out dr, limit, offset);
+                conn = OpenConnectionAndGetReader("SELECT * from busride order by busride_id limit :p0 offset :p1;", out dr, limit, offset);
                 while (dr.Read())
                 {
-                    int bussresa_id = dr.GetFieldValue<int>(dr.GetOrdinal("bussresa_id"));
-                    string avgangs_adress = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_adress"));
-                    string avgangs_stad = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_stad"));
-                    string avgangs_land = dr.GetFieldValue<string>(dr.GetOrdinal("avgangs_land"));
-                    DateTime avgangs_datum = dr.GetFieldValue<DateTime>(dr.GetOrdinal("avgangs_datum"));
-                    string ankomst_adress = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_adress"));
-                    string ankomst_stad = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_stad"));
-                    string ankomst_land = dr.GetFieldValue<string>(dr.GetOrdinal("ankomst_land"));
-                    DateTime ankomst_datum = dr.GetFieldValue<DateTime>(dr.GetOrdinal("ankomst_datum"));
-                    int kostnad = dr.GetFieldValue<int>(dr.GetOrdinal("kostnad"));
-                    int max_platser = dr.GetFieldValue<int>(dr.GetOrdinal("max_platser"));
-                    string chaffor_id = null;
-                    if (!dr.IsDBNull(dr.GetOrdinal("chaffor_id")))
+                    int busride_id = dr.GetFieldValue<int>(dr.GetOrdinal("busride_id"));
+                    string departure_address = dr.GetFieldValue<string>(dr.GetOrdinal("departure_address"));
+                    string departure_city = dr.GetFieldValue<string>(dr.GetOrdinal("departure_city"));
+                    string departure_country = dr.GetFieldValue<string>(dr.GetOrdinal("departure_country"));
+                    DateTime departure_date = dr.GetFieldValue<DateTime>(dr.GetOrdinal("departure_date"));
+                    string arrival_address = dr.GetFieldValue<string>(dr.GetOrdinal("arrival_address"));
+                    string arrival_city = dr.GetFieldValue<string>(dr.GetOrdinal("arrival_city"));
+                    string arrival_country = dr.GetFieldValue<string>(dr.GetOrdinal("arrival_country"));
+                    DateTime arrival_date = dr.GetFieldValue<DateTime>(dr.GetOrdinal("arrival_date"));
+                    int cost = dr.GetFieldValue<int>(dr.GetOrdinal("cost"));
+                    int max_seats = dr.GetFieldValue<int>(dr.GetOrdinal("max_seats"));
+                    string driver_id = null;
+                    if (!dr.IsDBNull(dr.GetOrdinal("driver_id")))
                     {
-                        chaffor_id = dr.GetFieldValue<string>(dr.GetOrdinal("chaffor_id"));
+                        driver_id = dr.GetFieldValue<string>(dr.GetOrdinal("driver_id"));
                     }
 
-                    returnObj.Add(new BussresaObject(bussresa_id, avgangs_adress, avgangs_stad, avgangs_land, avgangs_datum,
-                        ankomst_adress, ankomst_stad, ankomst_land, ankomst_datum, kostnad, max_platser, chaffor_id));
+                    returnObj.Add(new BusrideObject(busride_id, departure_address, departure_city, departure_country, departure_date,
+                        arrival_address, arrival_city, arrival_country, arrival_date, cost, max_seats, driver_id));
                 }
 
             }
@@ -446,114 +446,114 @@ namespace Mortfors.Login
             return returnObj;
         }
 
-        public static int InsertBussresa(BussresaObject newObject)
+        public static int InsertBusride(BusrideObject newObject)
         {
             int affectedRows = -1;
-            if (newObject.chaffor_id == "")
+            if (newObject.driver_id == "")
             {
-                affectedRows = ExecuteAndGetNonQuery("INSERT INTO bussresa (bussresa_id, avgangs_adress, avgangs_stad, avgangs_land, avgangs_datum, ankomst_adress, ankomst_stad, ankomst_land, ankomst_datum, kostnad, max_platser) values (:p0, :p1, :p2, :p3, :p4, :p5, :p6, :p7, :p8, :p9, :p10);", newObject.bussresa_id, newObject.avgangs_adress, newObject.avgangs_stad, newObject.avgangs_land, newObject.avgangs_datum, newObject.ankomst_adress, newObject.ankomst_stad, newObject.ankomst_land, newObject.ankomst_datum, newObject.kostnad, newObject.max_platser);
+                affectedRows = ExecuteAndGetNonQuery("INSERT INTO busride (busride_id, departure_address, departure_city, departure_country, departure_date, arrival_address, arrival_city, arrival_country, arrival_date, cost, max_seats) values (:p0, :p1, :p2, :p3, :p4, :p5, :p6, :p7, :p8, :p9, :p10);", newObject.busride_id, newObject.departure_address, newObject.departure_city, newObject.departure_country, newObject.departure_date, newObject.arrival_address, newObject.arrival_city, newObject.arrival_country, newObject.arrival_date, newObject.cost, newObject.max_seats);
             }
             else
             {
-                affectedRows = ExecuteAndGetNonQuery("INSERT INTO bussresa (bussresa_id, avgangs_adress, avgangs_stad, avgangs_land, avgangs_datum, ankomst_adress, ankomst_stad, ankomst_land, ankomst_datum, kostnad, max_platser, chaffor_id) values (:p0, :p1, :p2, :p3, :p4, :p5, :p6, :p7, :p8, :p9, :p10, :p11);", newObject.bussresa_id, newObject.avgangs_adress, newObject.avgangs_stad, newObject.avgangs_land, newObject.avgangs_datum, newObject.ankomst_adress, newObject.ankomst_stad, newObject.ankomst_land, newObject.ankomst_datum, newObject.kostnad, newObject.max_platser, newObject.chaffor_id);
+                affectedRows = ExecuteAndGetNonQuery("INSERT INTO busride (busride_id, departure_address, departure_city, departure_country, departure_date, arrival_address, arrival_city, arrival_country, arrival_date, cost, max_seats, driver_id) values (:p0, :p1, :p2, :p3, :p4, :p5, :p6, :p7, :p8, :p9, :p10, :p11);", newObject.busride_id, newObject.departure_address, newObject.departure_city, newObject.departure_country, newObject.departure_date, newObject.arrival_address, newObject.arrival_city, newObject.arrival_country, newObject.arrival_date, newObject.cost, newObject.max_seats, newObject.driver_id);
             }
             return affectedRows;
 
 
         }
 
-        public static int UpdateBussresa(BussresaObject newObject, BussresaObject oldObject)
+        public static int UpdateBusride(BusrideObject newObject, BusrideObject oldObject)
         {
             int affectedRows = -1;
-            if(newObject.chaffor_id == "")
+            if(newObject.driver_id == "")
             {
-                affectedRows = ExecuteAndGetNonQuery("UPDATE bussresa SET bussresa_id = :p0, avgangs_adress = :p1, avgangs_stad = :p2, avgangs_land = :p3, avgangs_datum = :p4, ankomst_adress = :p5, ankomst_stad = :p6, ankomst_land = :p7, ankomst_datum = :p8, kostnad = :p9, max_platser = :p10, chaffor_id = NULL WHERE bussresa_id = :p11;", newObject.bussresa_id, newObject.avgangs_adress, newObject.avgangs_stad, newObject.avgangs_land, newObject.avgangs_datum, newObject.ankomst_adress, newObject.ankomst_stad, newObject.ankomst_land, newObject.ankomst_datum, newObject.kostnad, newObject.max_platser, oldObject.bussresa_id);
+                affectedRows = ExecuteAndGetNonQuery("UPDATE busride SET busride_id = :p0, departure_address = :p1, departure_city = :p2, departure_country = :p3, departure_date = :p4, arrival_address = :p5, arrival_city = :p6, arrival_country = :p7, arrival_date = :p8, cost = :p9, max_seats = :p10, driver_id = NULL WHERE busride_id = :p11;", newObject.busride_id, newObject.departure_address, newObject.departure_city, newObject.departure_country, newObject.departure_date, newObject.arrival_address, newObject.arrival_city, newObject.arrival_country, newObject.arrival_date, newObject.cost, newObject.max_seats, oldObject.busride_id);
 
             }
             else
             {
-                affectedRows = ExecuteAndGetNonQuery("UPDATE bussresa SET bussresa_id = :p0, avgangs_adress = :p1, avgangs_stad = :p2, avgangs_land = :p3, avgangs_datum = :p4, ankomst_adress = :p5, ankomst_stad = :p6, ankomst_land = :p7, ankomst_datum = :p8, kostnad = :p9, max_platser = :p10, chaffor_id = :p11 WHERE bussresa_id = :p12;", newObject.bussresa_id, newObject.avgangs_adress, newObject.avgangs_stad, newObject.avgangs_land, newObject.avgangs_datum, newObject.ankomst_adress, newObject.ankomst_stad, newObject.ankomst_land, newObject.ankomst_datum, newObject.kostnad, newObject.max_platser, newObject.chaffor_id, oldObject.bussresa_id);
+                affectedRows = ExecuteAndGetNonQuery("UPDATE busride SET busride_id = :p0, departure_address = :p1, departure_city = :p2, departure_country = :p3, departure_date = :p4, arrival_address = :p5, arrival_city = :p6, arrival_country = :p7, arrival_date = :p8, cost = :p9, max_seats = :p10, driver_id = :p11 WHERE busride_id = :p12;", newObject.busride_id, newObject.departure_address, newObject.departure_city, newObject.departure_country, newObject.departure_date, newObject.arrival_address, newObject.arrival_city, newObject.arrival_country, newObject.arrival_date, newObject.cost, newObject.max_seats, newObject.driver_id, oldObject.busride_id);
 
             }
             return affectedRows;
         }
 
-        public static int DeleteBussresa(BussresaObject oldObject)
+        public static int DeleteBusride(BusrideObject oldObject)
         {
-            int bokningarCount = 0;
-            bokningarCount = ExecuteAndGetScalar("SELECT count(*) FROM bokning WHERE bokning.bussresa_id = :p0;", oldObject.bussresa_id);
+            int bookingsCount = 0;
+            bookingsCount = ExecuteAndGetScalar("SELECT count(*) FROM booking WHERE booking.busride_id = :p0;", oldObject.busride_id);
             
             int affectedRows = -1;
 
-            MessageBoxResult result = MessageBox.Show("Om du tar bort den här bussresan försvinner totalt " + bokningarCount + " bokningar! Vill du fortfarande ta bort bussresan?", "Varning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            MessageBoxResult result = MessageBox.Show("If you remove this busride a total of " + bookingsCount + " bookings will also be removed! Do you still wish to remove this busride?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Yes)
             {
-                ExecuteAndGetNonQuery("DELETE FROM bokning WHERE bussresa_id = :p0;", oldObject.bussresa_id);
-                affectedRows = ExecuteAndGetNonQuery("DELETE FROM bussresa WHERE bussresa_id = :p0;", oldObject.bussresa_id);
+                ExecuteAndGetNonQuery("DELETE FROM booking WHERE busride_id = :p0;", oldObject.busride_id);
+                affectedRows = ExecuteAndGetNonQuery("DELETE FROM busride WHERE busride_id = :p0;", oldObject.busride_id);
             }
             return affectedRows;
         }
 
-        public static int SetBussresaChaffor(BussresaObject oldObject, string chaffor_id)
+        public static int SetBusrideChaffor(BusrideObject oldObject, string driver_id)
         {
-            if(oldObject.chaffor_id == null || oldObject.chaffor_id == "")
+            if(oldObject.driver_id == null || oldObject.driver_id == "")
             {
-                BussresaObject newObject = new BussresaObject(oldObject.bussresa_id, oldObject.avgangs_adress, oldObject.avgangs_stad, oldObject.avgangs_land, oldObject.avgangs_datum, oldObject.ankomst_adress, oldObject.ankomst_stad, oldObject.ankomst_land, oldObject.ankomst_datum, oldObject.kostnad, oldObject.max_platser, chaffor_id);
-                return UpdateBussresa(newObject, oldObject);
+                BusrideObject newObject = new BusrideObject(oldObject.busride_id, oldObject.departure_address, oldObject.departure_city, oldObject.departure_country, oldObject.departure_date, oldObject.arrival_address, oldObject.arrival_city, oldObject.arrival_country, oldObject.arrival_date, oldObject.cost, oldObject.max_seats, driver_id);
+                return UpdateBusride(newObject, oldObject);
             }
             else
             {
-                MessageBoxResult result = MessageBox.Show("Du kan bara anmäla dig som chafför på bussresor som inte redan har en chafför.", "Varning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBoxResult result = MessageBox.Show("You can only apply to drive a busride that currently has no driver.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
 
             return -1;
         }
 
-        public static int RemoveBussresaChaffor(BussresaObject oldObject, string chaffor_id)
+        public static int RemoveBusrideChaffor(BusrideObject oldObject, string driver_id)
         {
-            if (oldObject.chaffor_id == null || oldObject.chaffor_id == chaffor_id)
+            if (oldObject.driver_id == null || oldObject.driver_id == driver_id)
             {
-                BussresaObject newObject = new BussresaObject(oldObject.bussresa_id, oldObject.avgangs_adress, oldObject.avgangs_stad, oldObject.avgangs_land, oldObject.avgangs_datum, oldObject.ankomst_adress, oldObject.ankomst_stad, oldObject.ankomst_land, oldObject.ankomst_datum, oldObject.kostnad, oldObject.max_platser, "");
-                return UpdateBussresa(newObject, oldObject);
+                BusrideObject newObject = new BusrideObject(oldObject.busride_id, oldObject.departure_address, oldObject.departure_city, oldObject.departure_country, oldObject.departure_date, oldObject.arrival_address, oldObject.arrival_city, oldObject.arrival_country, oldObject.arrival_date, oldObject.cost, oldObject.max_seats, "");
+                return UpdateBusride(newObject, oldObject);
             }
             else
             {
-                MessageBoxResult result = MessageBox.Show("Du kan bara avanmäla dig som på bussresor där du är chafför.", "Varning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBoxResult result = MessageBox.Show("You can only cancel the driver on a busride where you are the driver.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
 
             return -1;
         }
 
-        #endregion bussresa;
+        #endregion busride;
 
-        #region hallplats
+        #region station
 
-        public static int CountHallplatser()
+        public static int CountStations()
         {
             int count = 0;
-            count = ExecuteAndGetScalar("SELECT count(*) from hallplats;");        
+            count = ExecuteAndGetScalar("SELECT count(*) from station;");        
             return count;
         }
 
-        public static List<HallplatsObject> SelectHallplatser(int limit, int offset)
+        public static List<StationObject> SelectStations(int limit, int offset)
         {
-            List<HallplatsObject> returnObj = new List<HallplatsObject>();
+            List<StationObject> returnObj = new List<StationObject>();
 
             NpgsqlConnection conn = null;
             NpgsqlDataReader dr = null;
 
             try
             {
-                conn = OpenConnectionAndGetReader("SELECT * from hallplats order by lower(gatu_adress), lower(stad), lower(land) limit :p0 offset :p1;", out dr, limit, offset);
+                conn = OpenConnectionAndGetReader("SELECT * from station order by lower(street_address), lower(city), lower(country) limit :p0 offset :p1;", out dr, limit, offset);
                 while (dr.Read())
                 {
-                    string gatu_adress = dr.GetFieldValue<string>(dr.GetOrdinal("gatu_adress"));
-                    string stad = dr.GetFieldValue<string>(dr.GetOrdinal("stad"));
-                    string land = dr.GetFieldValue<string>(dr.GetOrdinal("land"));
+                    string street_address = dr.GetFieldValue<string>(dr.GetOrdinal("street_address"));
+                    string city = dr.GetFieldValue<string>(dr.GetOrdinal("city"));
+                    string country = dr.GetFieldValue<string>(dr.GetOrdinal("country"));
 
-                    returnObj.Add(new HallplatsObject(gatu_adress, stad, land));
+                    returnObj.Add(new StationObject(street_address, city, country));
                 }
 
             }
@@ -564,70 +564,70 @@ namespace Mortfors.Login
             return returnObj;
         }
 
-        public static int InsertHallplats(HallplatsObject newObject)
+        public static int InsertStation(StationObject newObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO hallplats (gatu_adress, stad, land) values (:p0, :p1, :p2);", newObject.gatu_adress, newObject.stad, newObject.land);
+            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO station (street_address, city, country) values (:p0, :p1, :p2);", newObject.street_address, newObject.city, newObject.country);
             return affectedRows;
 
 
         }
 
-        public static int UpdateHallplats(HallplatsObject newObject, HallplatsObject oldObject)
+        public static int UpdateStation(StationObject newObject, StationObject oldObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("UPDATE hallplats SET gatu_adress = :p0, stad = :p1, land = :p2 WHERE gatu_adress = :p3 AND stad = :p4 AND land = :p5;", newObject.gatu_adress, newObject.stad, newObject.land, oldObject.gatu_adress, oldObject.stad, oldObject.land);
+            int affectedRows = ExecuteAndGetNonQuery("UPDATE station SET street_address = :p0, city = :p1, country = :p2 WHERE street_address = :p3 AND city = :p4 AND country = :p5;", newObject.street_address, newObject.city, newObject.country, oldObject.street_address, oldObject.city, oldObject.country);
             return affectedRows;
         }
 
-        public static int DeleteHallplats(HallplatsObject oldObject)
+        public static int DeleteStation(StationObject oldObject)
         {
-            int bokningarCount = 0;
-            bokningarCount = ExecuteAndGetScalar("SELECT count(*) FROM bokning WHERE bokning.bussresa_id IN (SELECT bussresa.bussresa_id FROM bussresa WHERE (bussresa.avgangs_adress = :p0 AND bussresa.avgangs_stad = :p1 AND bussresa.avgangs_land = :p2) OR (bussresa.ankomst_adress = :p0 AND bussresa.ankomst_stad = :p1 AND bussresa.ankomst_land = :p2));", oldObject.gatu_adress, oldObject.stad, oldObject.land);
+            int bookingsCount = 0;
+            bookingsCount = ExecuteAndGetScalar("SELECT count(*) FROM booking WHERE booking.busride_id IN (SELECT busride.busride_id FROM busride WHERE (busride.departure_address = :p0 AND busride.departure_city = :p1 AND busride.departure_country = :p2) OR (busride.arrival_address = :p0 AND busride.arrival_city = :p1 AND busride.arrival_country = :p2));", oldObject.street_address, oldObject.city, oldObject.country);
 
-            int bussresorCount = 0;
-            bussresorCount = ExecuteAndGetScalar("SELECT count(*) FROM bussresa WHERE (bussresa.avgangs_adress = :p0 AND bussresa.avgangs_stad = :p1 AND bussresa.avgangs_land = :p2) OR (bussresa.ankomst_adress = :p0 AND bussresa.ankomst_stad = :p1 AND bussresa.ankomst_land = :p2);", oldObject.gatu_adress, oldObject.stad, oldObject.land);
+            int busridesCount = 0;
+            busridesCount = ExecuteAndGetScalar("SELECT count(*) FROM busride WHERE (busride.departure_address = :p0 AND busride.departure_city = :p1 AND busride.departure_country = :p2) OR (busride.arrival_address = :p0 AND busride.arrival_city = :p1 AND busride.arrival_country = :p2);", oldObject.street_address, oldObject.city, oldObject.country);
 
             int affectedRows = -1;
 
-            MessageBoxResult result = MessageBox.Show("Om du tar bort den här hållplatsen försvinner totalt "+ bussresorCount+ " bussresor och "+bokningarCount+" bokningar! Vill du fortfarande ta bort hållplatsen?", "Varning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+           MessageBoxResult result = MessageBox.Show("If you remove this station a total of " + busridesCount+ " busrides and "+bookingsCount+ " bookings will also be removed! Do you still wish to remove this station?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Yes)
             {
-                ExecuteAndGetNonQuery("DELETE FROM bokning WHERE bokning.bussresa_id IN (SELECT bussresa.bussresa_id FROM bussresa WHERE (bussresa.avgangs_adress = :p0 AND bussresa.avgangs_stad = :p1 AND bussresa.avgangs_land = :p2) OR (bussresa.ankomst_adress = :p0 AND bussresa.ankomst_stad = :p1 AND bussresa.ankomst_land = :p2));", oldObject.gatu_adress, oldObject.stad, oldObject.land);
-                ExecuteAndGetNonQuery("DELETE FROM bussresa WHERE (bussresa.avgangs_adress = :p0 AND bussresa.avgangs_stad = :p1 AND bussresa.avgangs_land = :p2) OR (bussresa.ankomst_adress = :p0 AND bussresa.ankomst_stad = :p1 AND bussresa.ankomst_land = :p2);", oldObject.gatu_adress, oldObject.stad, oldObject.land);
-                affectedRows = ExecuteAndGetNonQuery("DELETE FROM hallplats WHERE gatu_adress = :p0 AND stad = :p1 AND land = :p2;", oldObject.gatu_adress, oldObject.stad, oldObject.land);
+                ExecuteAndGetNonQuery("DELETE FROM booking WHERE booking.busride_id IN (SELECT busride.busride_id FROM busride WHERE (busride.departure_address = :p0 AND busride.departure_city = :p1 AND busride.departure_country = :p2) OR (busride.arrival_address = :p0 AND busride.arrival_city = :p1 AND busride.arrival_country = :p2));", oldObject.street_address, oldObject.city, oldObject.country);
+                ExecuteAndGetNonQuery("DELETE FROM busride WHERE (busride.departure_address = :p0 AND busride.departure_city = :p1 AND busride.departure_country = :p2) OR (busride.arrival_address = :p0 AND busride.arrival_city = :p1 AND busride.arrival_country = :p2);", oldObject.street_address, oldObject.city, oldObject.country);
+                affectedRows = ExecuteAndGetNonQuery("DELETE FROM station WHERE street_address = :p0 AND city = :p1 AND country = :p2;", oldObject.street_address, oldObject.city, oldObject.country);
             }
             return affectedRows;
         }
 
-        #endregion hallplats
+        #endregion station
 
-        #region resenar
+        #region traveller
 
-        public static int CountResenarer()
+        public static int CountTravellers()
         {
             int count = 0;
-            count = ExecuteAndGetScalar("SELECT count(*) from resenar;");
+            count = ExecuteAndGetScalar("SELECT count(*) from traveller;");
             return count;
         }
 
-        public static List<ResenarObject> SelectResenarer(int limit, int offset)
+        public static List<TravellerObject> SelectTravellers(int limit, int offset)
         {
-            List<ResenarObject> returnObj = new List<ResenarObject>();
+            List<TravellerObject> returnObj = new List<TravellerObject>();
 
             NpgsqlConnection conn = null;
             NpgsqlDataReader dr = null;
 
             try
             {
-                conn = OpenConnectionAndGetReader("SELECT * from resenar order by lower(email) limit :p0 offset :p1;", out dr, limit, offset);
+                conn = OpenConnectionAndGetReader("SELECT * from traveller order by lower(email) limit :p0 offset :p1;", out dr, limit, offset);
                 while (dr.Read())
                 {
                     string email = dr.GetFieldValue<string>(dr.GetOrdinal("email"));
-                    string hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("losenord"));
-                    string namn = dr.GetFieldValue<string>(dr.GetOrdinal("namn"));
-                    string adress = dr.GetFieldValue<string>(dr.GetOrdinal("adress"));
-                    string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("telefon"));
+                    string hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("password"));
+                    string name = dr.GetFieldValue<string>(dr.GetOrdinal("name"));
+                    string address = dr.GetFieldValue<string>(dr.GetOrdinal("address"));
+                    string phone = dr.GetFieldValue<string>(dr.GetOrdinal("phone"));
 
-                    returnObj.Add(new ResenarObject(email, hashedPassword, namn, adress, telefon));
+                    returnObj.Add(new TravellerObject(email, hashedPassword, name, address, phone));
                 }
 
             }
@@ -638,67 +638,67 @@ namespace Mortfors.Login
             return returnObj;
         }
 
-        public static int InsertResenar(ResenarObject newObject)
+        public static int InsertTraveller(TravellerObject newObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO resenar (email, losenord, namn, adress, telefon) values (:p0, :p1, :p2, :p3, :p4);", newObject.email, newObject.hashedPassword, newObject.namn, newObject.adress, newObject.telefon);
+            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO traveller (email, password, name, address, phone) values (:p0, :p1, :p2, :p3, :p4);", newObject.email, newObject.hashedPassword, newObject.name, newObject.address, newObject.phone);
             return affectedRows;
 
 
         }
 
-        public static int UpdateResenar(ResenarObject newObject, ResenarObject oldObject)
+        public static int UpdateTraveller(TravellerObject newObject, TravellerObject oldObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("UPDATE resenar SET email = :p0, losenord = :p1, namn = :p2, adress = :p3, telefon = :p4 WHERE email = :p5;", newObject.email, newObject.hashedPassword, newObject.namn, newObject.adress, newObject.telefon, oldObject.email);
+            int affectedRows = ExecuteAndGetNonQuery("UPDATE traveller SET email = :p0, password = :p1, name = :p2, address = :p3, phone = :p4 WHERE email = :p5;", newObject.email, newObject.hashedPassword, newObject.name, newObject.address, newObject.phone, oldObject.email);
             return affectedRows;
         }
 
-        public static int DeleteResenar(ResenarObject oldObject)
+        public static int DeleteTraveller(TravellerObject oldObject)
         {
-            int bokningarCount = 0;
-            bokningarCount = ExecuteAndGetScalar("SELECT count(*) FROM bokning WHERE bokning.resenar = :p0;", oldObject.email);
+            int bookingsCount = 0;
+            bookingsCount = ExecuteAndGetScalar("SELECT count(*) FROM booking WHERE booking.traveller = :p0;", oldObject.email);
             
             int affectedRows = -1;
 
-            MessageBoxResult result = MessageBox.Show("Om du tar bort den här resenären försvinner totalt " + bokningarCount + " bokningar! Vill du fortfarande ta bort resenären?", "Varning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            MessageBoxResult result = MessageBox.Show("If you remove this traveller a total of " + bookingsCount + " bookings will also be removed! Do you still wish to remove this traveller?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Yes)
             {
-                ExecuteAndGetNonQuery("DELETE FROM bokning WHERE bokning.resenar = :p0;", oldObject.email);
-                affectedRows = ExecuteAndGetNonQuery("DELETE FROM resenar WHERE email = :p0;", oldObject.email);
+                ExecuteAndGetNonQuery("DELETE FROM booking WHERE booking.traveller = :p0;", oldObject.email);
+                affectedRows = ExecuteAndGetNonQuery("DELETE FROM traveller WHERE email = :p0;", oldObject.email);
             }
             return affectedRows;
         }
 
-        #endregion resenar
+        #endregion traveller
 
-        #region anstalld
+        #region employee
 
-        public static int CountAnstallda()
+        public static int CountEmployees()
         {
             int count = 0;
-            count = ExecuteAndGetScalar("SELECT count(*) from anstalld;");
+            count = ExecuteAndGetScalar("SELECT count(*) from employee;");
             return count;
         }
 
-        public static List<AnstalldObject> SelectAnstallda(int limit, int offset)
+        public static List<EmployeeObject> SelectEmployees(int limit, int offset)
         {
-            List<AnstalldObject> returnObj = new List<AnstalldObject>();
+            List<EmployeeObject> returnObj = new List<EmployeeObject>();
 
             NpgsqlConnection conn = null;
             NpgsqlDataReader dr = null;
 
             try
             {
-                conn = OpenConnectionAndGetReader("SELECT * from anstalld order by lower(pers_nr) limit :p0 offset :p1;", out dr, limit, offset);
+                conn = OpenConnectionAndGetReader("SELECT * from employee order by lower(social_security_nr) limit :p0 offset :p1;", out dr, limit, offset);
                 while (dr.Read())
                 {
-                    string pers_nr = dr.GetFieldValue<string>(dr.GetOrdinal("pers_nr"));
-                    string hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("losenord"));
+                    string social_security_nr = dr.GetFieldValue<string>(dr.GetOrdinal("social_security_nr"));
+                    string hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("password"));
                     bool isAdmin = ((dr.GetFieldValue<Int32>(dr.GetOrdinal("admin")) == 0) ? false : true);
-                    string namn = dr.GetFieldValue<string>(dr.GetOrdinal("namn"));
-                    string adress = dr.GetFieldValue<string>(dr.GetOrdinal("adress"));
-                    string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("hem_telefon"));
+                    string name = dr.GetFieldValue<string>(dr.GetOrdinal("name"));
+                    string address = dr.GetFieldValue<string>(dr.GetOrdinal("address"));
+                    string phone = dr.GetFieldValue<string>(dr.GetOrdinal("home_phone"));
 
-                    returnObj.Add(new AnstalldObject(pers_nr, hashedPassword, isAdmin, namn, adress, telefon));
+                    returnObj.Add(new EmployeeObject(social_security_nr, hashedPassword, isAdmin, name, address, phone));
                 }
 
             }
@@ -709,26 +709,26 @@ namespace Mortfors.Login
             return returnObj;
         }
 
-        public static List<AnstalldObject> SelectChafforer(int limit, int offset)
+        public static List<EmployeeObject> SelectChafforer(int limit, int offset)
         {
-            List<AnstalldObject> returnObj = new List<AnstalldObject>();
+            List<EmployeeObject> returnObj = new List<EmployeeObject>();
 
             NpgsqlConnection conn = null;
             NpgsqlDataReader dr = null;
 
             try
             {
-                conn = OpenConnectionAndGetReader("SELECT * from anstalld where admin = 0 order by lower(pers_nr) limit :p0 offset :p1;", out dr, limit, offset);
+                conn = OpenConnectionAndGetReader("SELECT * from employee where admin = 0 order by lower(social_security_nr) limit :p0 offset :p1;", out dr, limit, offset);
                 while (dr.Read())
                 {
-                    string pers_nr = dr.GetFieldValue<string>(dr.GetOrdinal("pers_nr"));
-                    string hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("losenord"));
+                    string social_security_nr = dr.GetFieldValue<string>(dr.GetOrdinal("social_security_nr"));
+                    string hashedPassword = dr.GetFieldValue<string>(dr.GetOrdinal("password"));
                     bool isAdmin = ((dr.GetFieldValue<Int32>(dr.GetOrdinal("admin")) == 0) ? false : true);
-                    string namn = dr.GetFieldValue<string>(dr.GetOrdinal("namn"));
-                    string adress = dr.GetFieldValue<string>(dr.GetOrdinal("adress"));
-                    string telefon = dr.GetFieldValue<string>(dr.GetOrdinal("hem_telefon"));
+                    string name = dr.GetFieldValue<string>(dr.GetOrdinal("name"));
+                    string address = dr.GetFieldValue<string>(dr.GetOrdinal("address"));
+                    string phone = dr.GetFieldValue<string>(dr.GetOrdinal("home_phone"));
 
-                    returnObj.Add(new AnstalldObject(pers_nr, hashedPassword, isAdmin, namn, adress, telefon));
+                    returnObj.Add(new EmployeeObject(social_security_nr, hashedPassword, isAdmin, name, address, phone));
                 }
 
             }
@@ -739,37 +739,37 @@ namespace Mortfors.Login
             return returnObj;
         }
 
-        public static int InsertAnstalld(AnstalldObject newObject)
+        public static int InsertEmployee(EmployeeObject newObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO anstalld (pers_nr, losenord, admin, namn, adress, hem_telefon) values (:p0, :p1, :p2, :p3, :p4, :p5);", newObject.personNummer, newObject.hashedPassword, newObject.isAdmin ? 1 : 0, newObject.namn, newObject.adress, newObject.telefon);
+            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO employee (social_security_nr, password, admin, name, address, home_phone) values (:p0, :p1, :p2, :p3, :p4, :p5);", newObject.personNummer, newObject.hashedPassword, newObject.isAdmin ? 1 : 0, newObject.name, newObject.address, newObject.phone);
             return affectedRows;
 
 
         }
 
-        public static int UpdateAnstalld(AnstalldObject newObject, AnstalldObject oldObject)
+        public static int UpdateEmployee(EmployeeObject newObject, EmployeeObject oldObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("UPDATE anstalld SET pers_nr = :p0, losenord = :p1, admin = :p2, namn = :p3, adress = :p4, hem_telefon = :p5 WHERE pers_nr = :p6;", newObject.personNummer, newObject.hashedPassword, newObject.isAdmin ? 1 : 0, newObject.namn, newObject.adress, newObject.telefon, oldObject.personNummer);
+            int affectedRows = ExecuteAndGetNonQuery("UPDATE employee SET social_security_nr = :p0, password = :p1, admin = :p2, name = :p3, address = :p4, home_phone = :p5 WHERE social_security_nr = :p6;", newObject.personNummer, newObject.hashedPassword, newObject.isAdmin ? 1 : 0, newObject.name, newObject.address, newObject.phone, oldObject.personNummer);
             return affectedRows;
         }
 
-        public static int DeleteAnstalld(AnstalldObject oldObject)
+        public static int DeleteEmployee(EmployeeObject oldObject)
         {
-            int bussresaCount = 0;
-            bussresaCount = ExecuteAndGetScalar("SELECT count(*) FROM bussresa WHERE bussresa.chaffor_id = :p0;", oldObject.personNummer);
+            int busrideCount = 0;
+            busrideCount = ExecuteAndGetScalar("SELECT count(*) FROM busride WHERE busride.driver_id = :p0;", oldObject.personNummer);
 
             int affectedRows = -1;
 
-            MessageBoxResult result = MessageBox.Show("Om du tar bort den här anställda personen försvinner den anställda som chafför på totalt " + bussresaCount + " bussresor! (Men bussresorna finns fortfarande kvar ändå.) Vill du fortfarande ta bort den anställda?", "Varning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            MessageBoxResult result = MessageBox.Show("If you remove this empolyee the employee also disappears as driver on a total of " + busrideCount + " busrides! (But the busrides remain and are not removed.) Do you still wish to remove this employee?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Yes)
             {
-                ExecuteAndGetNonQuery("UPDATE bussresa SET chaffor_id = NULL WHERE chaffor_id = :p0;", oldObject.personNummer);
-                affectedRows = ExecuteAndGetNonQuery("DELETE FROM anstalld WHERE pers_nr = :p0;", oldObject.personNummer);
+                ExecuteAndGetNonQuery("UPDATE busride SET driver_id = NULL WHERE driver_id = :p0;", oldObject.personNummer);
+                affectedRows = ExecuteAndGetNonQuery("DELETE FROM employee WHERE social_security_nr = :p0;", oldObject.personNummer);
             }
             return affectedRows;
         }
 
-        #endregion anstalld
+        #endregion employee
 
     }
 }
