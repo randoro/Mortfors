@@ -52,7 +52,7 @@ namespace Mortfors.Employee.Stations
             count = DBConnection.CountStations();
             stationObject = DBConnection.SelectStations(limit, offset);
             lv_lista.ItemsSource = stationObject;
-            l_visar.Content = "Showing " + offset + " - " + (offset + limit) + " av " + count + ".";
+            l_visar.Content = "Showing " + offset + " - " + (offset + limit) + " of " + count + ".";
             DisableButtons();
         }
 
@@ -123,7 +123,7 @@ namespace Mortfors.Employee.Stations
             }
             else
             {
-                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Nothing selected.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -139,7 +139,7 @@ namespace Mortfors.Employee.Stations
             }
             else
             {
-                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Nothing selected.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }

@@ -20,17 +20,41 @@ namespace Mortfors.Login
 
         #endregion DBCredentials
 
+        #region errorHandling
         public static string ErrorMessage = "";
+
+        private static void HandleException(PostgresException e)
+        {
+            ErrorMessage = e.Message;
+            switch (e.SqlState)
+            {
+                case "23503":
+                    MessageBox.Show("Something is wrong with a foreign key value. Try refreshing!", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    break;
+                case "23505":
+                    MessageBox.Show("The table already has an entry with the same ID or key values. Can't add duplicates!", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    break;
+                default:
+                    MessageBox.Show("Unknown SQL Error! " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    break;
+            }
+
+            Console.WriteLine("Exception Message: " + e.Message);
+            Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
+        }
+
+
+        #endregion errorHandling
 
         #region rawConnections
 
         /// <summary>
         /// For getting rows, SELECT
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="statement"></param>
         /// <param name="parameters"></param>
         /// <returns>Returns Connection</returns>
-        private static NpgsqlConnection OpenConnectionAndGetReader(string query, out NpgsqlDataReader reader, params object[] parameters)
+        private static NpgsqlConnection OpenConnectionAndGetReader(string statement, out NpgsqlDataReader reader, params object[] parameters)
         {
             NpgsqlConnection conn = null;
             reader = null;
@@ -39,7 +63,7 @@ namespace Mortfors.Login
             {
                 conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
                 conn.Open();
-                NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+                NpgsqlCommand cmd = new NpgsqlCommand(statement, conn);
 
                 for (int i = 0; i < parameters.Length; i++)
                 {
@@ -50,8 +74,13 @@ namespace Mortfors.Login
                 Console.WriteLine("Query (Reader) command executed: " + cmd.CommandText);
 
             }
+            catch (PostgresException e)
+            {
+                HandleException(e);
+            }
             catch (Exception e)
             {
+                Console.WriteLine("ERROR! Other kind of exception.");
                 Console.WriteLine("Exception Message: " + e.Message);
                 Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
             }
@@ -61,10 +90,10 @@ namespace Mortfors.Login
         /// <summary>
         /// For getting single values, COUNT, SUM, returns single value int. Is -1 in failure.
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="statement"></param>
         /// <param name="parameters"></param>
         /// <returns>Returns single value int</returns>
-        private static int ExecuteAndGetScalar(string query, params object[] parameters)
+        private static int ExecuteAndGetScalar(string statement, params object[] parameters)
         {
             NpgsqlConnection conn = null;
             int number = -1;
@@ -73,7 +102,7 @@ namespace Mortfors.Login
             {
                 conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
                 conn.Open();
-                NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+                NpgsqlCommand cmd = new NpgsqlCommand(statement, conn);
 
                 for (int i = 0; i < parameters.Length; i++)
                 {
@@ -85,8 +114,13 @@ namespace Mortfors.Login
                 Console.WriteLine("Scalar command executed: " + cmd.CommandText);
 
             }
+            catch (PostgresException e)
+            {
+                HandleException(e);
+            }
             catch (Exception e)
             {
+                Console.WriteLine("ERROR! Other kind of exception.");
                 Console.WriteLine("Exception Message: " + e.Message);
                 Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
             }
@@ -101,10 +135,10 @@ namespace Mortfors.Login
         /// <summary>
         /// For getting affected rows, INSERT, DELETE, UPDATE, returns number of rows affected. Is -1 in failure.
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="statement"></param>
         /// <param name="parameters"></param>
         /// <returns>Number of rows affected</returns>
-        private static int ExecuteAndGetNonQuery(string query, params object[] parameters)
+        private static int ExecuteAndGetNonQuery(string statement, params object[] parameters)
         {
             NpgsqlConnection conn = null;
             int number = -1;
@@ -113,7 +147,7 @@ namespace Mortfors.Login
             {
                 conn = new NpgsqlConnection("Server=" + host + "; Port=" + port + "; UserId = " + userID + "; Password = " + password + "; Database = " + database + "");
                 conn.Open();
-                NpgsqlCommand cmd = new NpgsqlCommand(query, conn);
+                NpgsqlCommand cmd = new NpgsqlCommand(statement, conn);
 
                 for (int i = 0; i < parameters.Length; i++)
                 {
@@ -127,16 +161,11 @@ namespace Mortfors.Login
             }
             catch (PostgresException e)
             {
-                ErrorMessage = e.Message;
-                switch (e.SqlState)
-                {
-                    case "23503":
-                        ErrorMessage = "Foreign key error!.";
-                        break;
-                    default:
-                        break;
-                }
-                
+                HandleException(e);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("ERROR! Other kind of exception.");
                 Console.WriteLine("Exception Message: " + e.Message);
                 Console.WriteLine("Could not connect to database. Stacktrace:" + e.StackTrace);
             }

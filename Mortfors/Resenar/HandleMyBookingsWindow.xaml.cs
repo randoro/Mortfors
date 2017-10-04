@@ -51,7 +51,7 @@ namespace Mortfors.Traveller
             count = DBConnection.CountBookings();
             bookingObject = DBConnection.SelectBookingsJoinBusride(((TravellerObject)Authenticator.currentUser).email, limit, offset);
             lv_lista.ItemsSource = bookingObject;
-            l_visar.Content = "Showing " + offset + " - " + (offset + limit) + " av " + count + ".";
+            l_visar.Content = "Showing " + offset + " - " + (offset + limit) + " of " + count + ".";
             DisableButtons();
         }
 
@@ -116,7 +116,7 @@ namespace Mortfors.Traveller
             }
             else
             {
-                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Nothing selected.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }

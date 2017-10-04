@@ -42,7 +42,7 @@ namespace Mortfors.Traveller
         {
             count = DBConnection.CountBusrides();
             lv_busrides.ItemsSource = DBConnection.SelectBusrides(limit, offset);
-            l_visar.Content = "Showing " + offset + " - " + (offset + limit) + " av " + count + ".";
+            l_visar.Content = "Showing " + offset + " - " + (offset + limit) + " of " + count + ".";
             DisableButtons();
         }
 
@@ -109,7 +109,7 @@ namespace Mortfors.Traveller
 
                 if (DBConnection.CheckIfHasBooking(((BusrideObject)lv_busrides.SelectedItem).busride_id, ((TravellerObject)Authenticator.currentUser).email))
                 {
-                    MessageBox.Show("Du har redan en booking på den här busriden.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("You are already booked on this busride.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
@@ -121,7 +121,7 @@ namespace Mortfors.Traveller
             }
             else
             {
-                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Nothing selected.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -131,7 +131,7 @@ namespace Mortfors.Traveller
             {
                 if(!DBConnection.CheckIfHasBooking(((BusrideObject)lv_busrides.SelectedItem).busride_id, ((TravellerObject)Authenticator.currentUser).email))
                 {
-                    MessageBox.Show("Du har ingen booking på den här busriden.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("You are not booked on this busride.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
@@ -146,7 +146,7 @@ namespace Mortfors.Traveller
             }
             else
             {
-                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Nothing selected.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

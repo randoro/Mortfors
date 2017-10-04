@@ -31,8 +31,6 @@ namespace Mortfors
         public MainWindow()
         {
             InitializeComponent();
-
-           SimpleHash.HashTest();
             
         }
 

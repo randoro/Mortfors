@@ -51,7 +51,7 @@ namespace Mortfors.Employee.Travellers
             count = DBConnection.CountTravellers();
             travellerObject = DBConnection.SelectTravellers(limit, offset);
             lv_lista.ItemsSource = travellerObject;
-            l_visar.Content = "Showing " + offset + " - " + (offset + limit) + " av " + count + ".";
+            l_visar.Content = "Showing " + offset + " - " + (offset + limit) + " of " + count + ".";
             DisableButtons();
         }
 
@@ -122,7 +122,7 @@ namespace Mortfors.Employee.Travellers
             }
             else
             {
-                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Nothing selected.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -139,7 +139,7 @@ namespace Mortfors.Employee.Travellers
             }
             else
             {
-                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Nothing selected.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }

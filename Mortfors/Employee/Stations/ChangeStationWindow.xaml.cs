@@ -57,24 +57,26 @@ namespace Mortfors.Employee.Stations
         {
             if(tb_gatuaddress.Text == "" || tb_city.Text == "" || tb_country.Text == "")
             {
-                MessageBox.Show("Empty fields are not allowed.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Empty fields are not allowed.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             StationObject newObject = new StationObject(tb_gatuaddress.Text, tb_city.Text, tb_country.Text);
+            int rowsChanged = -1;
 
             if(newstation)
             {
-                DBConnection.InsertStation(newObject);
+                rowsChanged = DBConnection.InsertStation(newObject);
             }
             else
             {
-                DBConnection.UpdateStation(newObject, oldObject);
+                rowsChanged = DBConnection.UpdateStation(newObject, oldObject);
             }
 
-            parentWindow.parentWindow.UpdateAllChain();
-
-            Close();
-            //TODO: check if ok
+            if (rowsChanged > 0)
+            {
+                parentWindow.parentWindow.UpdateAllChain();
+                Close();
+            }
         }
 
         private void b_cancel_Click(object sender, RoutedEventArgs e)

@@ -89,26 +89,28 @@ namespace Mortfors.Employee
         {
             if (tb_busride_id.Text == "" || departure_address == "" || departure_city == "" || departure_country == "" || dtp_departuredate.Value == null || arrival_address == "" || arrival_city == "" || arrival_country == "" || dtp_arrivaldate.Value == null || tb_cost.Text == "" || tb_max_seats.Text == "")
             {
-                MessageBox.Show("Empty fields are not allowed. (Förutom Driver ID)", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Empty fields are not allowed. (Except for Driver ID)", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
 
             BusrideObject newObject = new BusrideObject(Int32.Parse(tb_busride_id.Text), departure_address, departure_city, departure_country, (DateTime)dtp_departuredate.Value, arrival_address, arrival_city, arrival_country, (DateTime)dtp_arrivaldate.Value, Int32.Parse(tb_cost.Text), Int32.Parse(tb_max_seats.Text), tb_driver_id.Text);
+            int rowsChanged = -1;
 
             if (newbusride)
             {
-                DBConnection.InsertBusride(newObject);
+                rowsChanged = DBConnection.InsertBusride(newObject);
             }
             else
             {
-                DBConnection.UpdateBusride(newObject, oldObject);
+                rowsChanged = DBConnection.UpdateBusride(newObject, oldObject);
             }
 
-            parentWindow.UpdateAllChain();
-
-            Close();
-            //TODO: check if ok
+            if (rowsChanged > 0)
+            {
+                parentWindow.UpdateAllChain();
+                Close();
+            }
         }
 
         private void b_cancel_Click(object sender, RoutedEventArgs e)

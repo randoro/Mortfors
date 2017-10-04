@@ -85,7 +85,7 @@ namespace Mortfors
         {
             count = DBConnection.CountBusrides();
             lv_busrides.ItemsSource = DBConnection.SelectBusrides(limit, offset);
-            l_visar.Content = "Showing "+ offset + " - "+ (offset+limit) + " av " + count + ".";
+            l_visar.Content = "Showing "+ offset + " - "+ (offset+limit) + " of " + count + ".";
             DisableButtons();
         }
 
@@ -177,7 +177,7 @@ namespace Mortfors
             }
             else
             {
-                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Nothing selected.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -193,7 +193,7 @@ namespace Mortfors
             }
             else
             {
-                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Nothing selected.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -209,7 +209,7 @@ namespace Mortfors
             }
             else
             {
-                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Nothing selected.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -225,7 +225,7 @@ namespace Mortfors
             }
             else
             {
-                MessageBox.Show("Inget markerat.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Nothing selected.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

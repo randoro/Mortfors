@@ -50,13 +50,13 @@ namespace Mortfors.Traveller
         {
             if (tb_email.Text == "" || pb_password.Password == "" || pb_confirm_password.Password == "" || tb_name.Text == "" || tb_address.Text == "" || tb_phone.Text == "")
             {
-                MessageBox.Show("Empty fields are not allowed.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Empty fields are not allowed.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (!(pb_password.Password == pb_confirm_password.Password))
             {
-                MessageBox.Show("Passworden i lösenordsfält och confirmt lösenordsfält stämmer inte överens.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("The passwords in the passwords fields are not the same.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -69,11 +69,9 @@ namespace Mortfors.Traveller
             {
                 Authenticator.currentUser = newObject;
                 parentWindow.UpdateAllChain();
+                Close();
             }
             
-
-            Close();
-            //TODO: check if ok
         }
 
         private void b_cancel_Click(object sender, RoutedEventArgs e)

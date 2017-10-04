@@ -60,25 +60,25 @@ namespace Mortfors.Employee.Employees
         {
             if (tb_social_security_nr.Text == "" || pb_password.Password == "" || tb_name.Text == "" || tb_address.Text == "" || tb_home_phone.Text == "")
             {
-                MessageBox.Show("Empty fields are not allowed.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Empty fields are not allowed.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             
             EmployeeObject newObject = new EmployeeObject(tb_social_security_nr.Text, SimpleHash.GenerateHashedPassword(tb_social_security_nr.Text, pb_password.Password), (bool)cb_admin.IsChecked, tb_name.Text, tb_address.Text, tb_home_phone.Text);
-
+            int rowsChanged = -1;
             if (newemployee)
             {
-                DBConnection.InsertEmployee(newObject);
+                rowsChanged = DBConnection.InsertEmployee(newObject);
             }
             else
             {
-                DBConnection.UpdateEmployee(newObject, oldObject);
+                rowsChanged = DBConnection.UpdateEmployee(newObject, oldObject);
             }
-
-            parentWindow.parentWindow.UpdateAllChain();
-
-            Close();
-            //TODO: check if ok
+            if (rowsChanged > 0)
+            {
+                parentWindow.parentWindow.UpdateAllChain();
+                Close();
+            }
         }
 
         private void b_cancel_Click(object sender, RoutedEventArgs e)

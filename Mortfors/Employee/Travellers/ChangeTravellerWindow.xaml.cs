@@ -59,26 +59,28 @@ namespace Mortfors.Employee.Travellers
         {
             if (tb_email.Text == "" || pb_password.Password == "" || tb_name.Text == "" || tb_address.Text == "" || tb_phone.Text == "")
             {
-                MessageBox.Show("Empty fields are not allowed.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Empty fields are not allowed.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
 
             TravellerObject newObject = new TravellerObject(tb_email.Text, SimpleHash.GenerateHashedPassword(tb_email.Text, pb_password.Password), tb_name.Text, tb_address.Text, tb_phone.Text);
+            int rowsChanged = -1;
 
             if (newtraveller)
             {
-                DBConnection.InsertTraveller(newObject);
+                rowsChanged = DBConnection.InsertTraveller(newObject);
             }
             else
             {
-                DBConnection.UpdateTraveller(newObject, oldObject);
+                rowsChanged = DBConnection.UpdateTraveller(newObject, oldObject);
             }
 
-            parentWindow.parentWindow.UpdateAllChain();
-
-            Close();
-            //TODO: check if ok
+            if (rowsChanged > 0)
+            {
+                parentWindow.parentWindow.UpdateAllChain();
+                Close();
+            }
         }
 
         private void b_cancel_Click(object sender, RoutedEventArgs e)

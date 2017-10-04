@@ -71,7 +71,7 @@ namespace Mortfors.Employee.Bookings
         {
             if (tb_busride_id.Text == "" || tb_traveller.Text == "" || tb_seats.Text == "")
             {
-                MessageBox.Show("Empty fields are not allowed.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Empty fields are not allowed.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -81,25 +81,26 @@ namespace Mortfors.Employee.Bookings
 
             if (DBConnection.CheckIfBookingAllowed(newObject))
             {
-
+                int rowsChanged = -1;
                 if (newbooking)
                 {
-                    DBConnection.InsertBooking(newObject);
+                    rowsChanged = DBConnection.InsertBooking(newObject);
                 }
                 else
                 {
-                    DBConnection.UpdateBooking(newObject, oldObject);
+                    rowsChanged = DBConnection.UpdateBooking(newObject, oldObject);
                 }
 
-                parentWindow.parentWindow.UpdateAllChain();
-
-                Close();
+                if (rowsChanged > 0)
+                {
+                    parentWindow.parentWindow.UpdateAllChain();
+                    Close();
+                }
             }
             else
             {
-                MessageBox.Show("Inte tillräckligt många fria platser på busriden.", "Fel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Not enough free seats on the busride.", "Error!", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-            //TODO: check if ok
         }
 
         private void b_cancel_Click(object sender, RoutedEventArgs e)
