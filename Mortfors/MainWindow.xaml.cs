@@ -85,12 +85,12 @@ namespace Mortfors
 
         private void b_cheat1_Click(object sender, RoutedEventArgs e)
         {
-            TryLogin("199301123395", "test123");
+            TryLogin("199301120000", "test123");
         }
 
         private void b_cheat2_Click(object sender, RoutedEventArgs e)
         {
-            TryLogin("199301123394", "test123");
+            TryLogin("199301121111", "test123");
         }
 
         private void b_cheat3_Click(object sender, RoutedEventArgs e)

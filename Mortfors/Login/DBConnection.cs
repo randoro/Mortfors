@@ -311,16 +311,14 @@ namespace Mortfors.Login
 
         public static int InsertBooking(BookingObject newObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO booking (busride_id, traveller, seats) values (:p0, :p1, :p2);", newObject.busride_id, newObject.traveller, newObject.seats);
-            return affectedRows;
+            return ExecuteAndGetNonQuery("INSERT INTO booking (busride_id, traveller, seats) values (:p0, :p1, :p2);", newObject.busride_id, newObject.traveller, newObject.seats);
 
 
         }
 
         public static int UpdateBooking(BookingObject newObject, BookingObject oldObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("UPDATE booking SET busride_id = :p0, traveller = :p1, seats = :p2 WHERE busride_id = :p3 AND traveller = :p4;", newObject.busride_id, newObject.traveller, newObject.seats, oldObject.busride_id, oldObject.traveller);
-            return affectedRows;
+            return ExecuteAndGetNonQuery("UPDATE booking SET busride_id = :p0, traveller = :p1, seats = :p2 WHERE busride_id = :p3 AND traveller = :p4;", newObject.busride_id, newObject.traveller, newObject.seats, oldObject.busride_id, oldObject.traveller);
         }
 
         public static int DeleteBooking(BookingObject oldObject)
@@ -595,16 +593,12 @@ namespace Mortfors.Login
 
         public static int InsertStation(StationObject newObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO station (street_address, city, country) values (:p0, :p1, :p2);", newObject.street_address, newObject.city, newObject.country);
-            return affectedRows;
-
-
+            return ExecuteAndGetNonQuery("INSERT INTO station (street_address, city, country) VALUES (:p0, :p1, :p2);", newObject.street_address, newObject.city, newObject.country);
         }
 
         public static int UpdateStation(StationObject newObject, StationObject oldObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("UPDATE station SET street_address = :p0, city = :p1, country = :p2 WHERE street_address = :p3 AND city = :p4 AND country = :p5;", newObject.street_address, newObject.city, newObject.country, oldObject.street_address, oldObject.city, oldObject.country);
-            return affectedRows;
+            return ExecuteAndGetNonQuery("UPDATE station SET street_address = :p0, city = :p1, country = :p2 WHERE street_address = :p3 AND city = :p4 AND country = :p5;", newObject.street_address, newObject.city, newObject.country, oldObject.street_address, oldObject.city, oldObject.country);
         }
 
         public static int DeleteStation(StationObject oldObject)
@@ -669,16 +663,14 @@ namespace Mortfors.Login
 
         public static int InsertTraveller(TravellerObject newObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO traveller (email, password, name, address, phone) values (:p0, :p1, :p2, :p3, :p4);", newObject.email, newObject.hashedPassword, newObject.name, newObject.address, newObject.phone);
-            return affectedRows;
+            return ExecuteAndGetNonQuery("INSERT INTO traveller (email, password, name, address, phone) values (:p0, :p1, :p2, :p3, :p4);", newObject.email, newObject.hashedPassword, newObject.name, newObject.address, newObject.phone);
 
 
         }
 
         public static int UpdateTraveller(TravellerObject newObject, TravellerObject oldObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("UPDATE traveller SET email = :p0, password = :p1, name = :p2, address = :p3, phone = :p4 WHERE email = :p5;", newObject.email, newObject.hashedPassword, newObject.name, newObject.address, newObject.phone, oldObject.email);
-            return affectedRows;
+            return ExecuteAndGetNonQuery("UPDATE traveller SET email = :p0, password = :p1, name = :p2, address = :p3, phone = :p4 WHERE email = :p5;", newObject.email, newObject.hashedPassword, newObject.name, newObject.address, newObject.phone, oldObject.email);
         }
 
         public static int DeleteTraveller(TravellerObject oldObject)
@@ -770,16 +762,14 @@ namespace Mortfors.Login
 
         public static int InsertEmployee(EmployeeObject newObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("INSERT INTO employee (social_security_nr, password, admin, name, address, home_phone) values (:p0, :p1, :p2, :p3, :p4, :p5);", newObject.personNummer, newObject.hashedPassword, newObject.isAdmin ? 1 : 0, newObject.name, newObject.address, newObject.phone);
-            return affectedRows;
+            return ExecuteAndGetNonQuery("INSERT INTO employee (social_security_nr, password, admin, name, address, home_phone) values (:p0, :p1, :p2, :p3, :p4, :p5);", newObject.personNummer, newObject.hashedPassword, newObject.isAdmin ? 1 : 0, newObject.name, newObject.address, newObject.phone);
 
 
         }
 
         public static int UpdateEmployee(EmployeeObject newObject, EmployeeObject oldObject)
         {
-            int affectedRows = ExecuteAndGetNonQuery("UPDATE employee SET social_security_nr = :p0, password = :p1, admin = :p2, name = :p3, address = :p4, home_phone = :p5 WHERE social_security_nr = :p6;", newObject.personNummer, newObject.hashedPassword, newObject.isAdmin ? 1 : 0, newObject.name, newObject.address, newObject.phone, oldObject.personNummer);
-            return affectedRows;
+            return ExecuteAndGetNonQuery("UPDATE employee SET social_security_nr = :p0, password = :p1, admin = :p2, name = :p3, address = :p4, home_phone = :p5 WHERE social_security_nr = :p6;", newObject.personNummer, newObject.hashedPassword, newObject.isAdmin ? 1 : 0, newObject.name, newObject.address, newObject.phone, oldObject.personNummer);
         }
 
         public static int DeleteEmployee(EmployeeObject oldObject)
